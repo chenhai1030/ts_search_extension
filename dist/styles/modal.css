@@ -1,0 +1,107 @@
+.FuntvModalDiv{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: -1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+#FuntvModalClose {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+#FuntvModalClose:hover,
+#FuntvModalClose:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+#funtv-modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+#funtv-caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+#detailMeta {
+    display: block;
+    padding: 0 0 10px 0;
+    position: absolute;
+    top: 15px;
+    left: 35px
+}
+#img-caption {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 19px;
+    line-height: 19px;
+    margin-right: 30px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    color: rgba(255,255,255,.8);
+}
+#imagemeta {
+    margin-top: 0;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 11px;
+}
+#navr.nav {
+    right: 0;
+    position: absolute;
+    height: 100%;
+    width: 60px;
+    top: 0;
+}
+.nofocus {
+    outline: 0;
+}
+/* #navr.nav .icon {
+    background-image: url(./res/navr.svg);
+}
+#navl.nav .icon {
+    background-image: url(./res/navl.svg);
+} */
+.nav .icon {
+    left: 50%;
+}
+.nav .icon {
+    position: absolute;
+    -ms-transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    top: 50%;
+    padding: 0;
+    width: 42px;
+    height: 42px;
+    transition: all .25s cubic-bezier(.3,.55,.1,1);
+    margin-top: -15px;
+    -ms-opacity: .75;
+    opacity: .75;
+    -ms-background-repeat: no-repeat;
+    background-repeat: no-repeat;
+}
