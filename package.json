@@ -1,7 +1,7 @@
 {
-  "name": "chrome-extension-typescript-starter",
+  "name": "ts-search-extension",
   "version": "1.0.0",
-  "description": "chrome-extension-typescript-starter",
+  "description": "based on chrome-extension-typescript-starter",
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=development webpack --config webpack/webpack.dev.js --mode=development --watch ",
@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chibat/chrome-extension-typescript-starter.git"
+    "url": "https://github.com/chenhai1030/ts_search_extension.git"
   },
   "dependencies": {
     "jquery": "^3.5.0",

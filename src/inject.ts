@@ -15,7 +15,6 @@ function handleDragStart (evt: { clientX: number; clientY: number; }) {
     if (obj.tagName.toLowerCase() === 'input') {
         return
     }
-
     baseMouseX = evt.clientX
     baseMouseY = evt.clientY
     window.parent.postMessage({
@@ -54,7 +53,7 @@ function switchShow(){
     let imgDiv = document.getElementById("imgContainer")
     if(imgDiv.style.display == "none"){
         imgDiv.style.display = 'block'
-        let imgCheight 
+        let imgCheight: string 
         let len = imgDiv.childNodes.length
         // console.info("imgs:", len)
         if (len > 6){
@@ -88,7 +87,7 @@ function getItemNum(res: { total: any; count: any; }){
 }
 
 function showPreview(e){
-    clearTimeout(timeoutID)
+    clearTimeout(this.timeoutID)
     let imgSrc = e.path[0].attributes[0].nodeValue
     let imgName = imgSrc.substring(imgSrc.lastIndexOf('/')+1)
     let msz = ""
@@ -97,7 +96,7 @@ function showPreview(e){
             msz = imgarrs[i].dimensions
         }
     }
-    timeoutID = window.setTimeout(function(){
+    this.timeoutID = window.setTimeout(function(){
         // sendMsg("preview", data)
         window.parent.postMessage({
             cmd: "preview", 
@@ -107,12 +106,12 @@ function showPreview(e){
 }
 
 function exChangePic(e){
-    clearTimeout(timeoutID); 
+    clearTimeout(this.timeoutID); 
     let data = e.path[0].attributes[0].nodeValue
     sendMsg("exchange", data)
 }
 
-function createImg(src, i){
+function createImg(src:string, i:number){
     let imgDiv = document.getElementById("imgContainer")
     let img = document.createElement("img")
     img.src = src
@@ -129,7 +128,7 @@ function createImg(src, i){
     document.getElementById(img.id).addEventListener("dblclick", exChangePic)
 }
 
-function prepareImg(num, resObj){
+function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
     let imgDiv = document.getElementById("imgContainer")
     let childs = imgDiv.childNodes
     for (let i=childs.length -1; i>=0; i--){

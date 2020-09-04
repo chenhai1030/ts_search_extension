@@ -10,8 +10,8 @@ function dragStart (mouseX: any, mouseY: any) {
     frameTop = myIframe.offsetTop
     frameLeft = myIframe.offsetLeft
     // 得出鼠标在上层的位置
-    pageMouseX = mouseX
-    pageMouseY = mouseY
+    pageMouseX = mouseX + frameLeft
+    pageMouseY = mouseY + frameTop
   
     document.addEventListener('mouseup', dragEnd)
     document.addEventListener('mousemove', handlePageMousemove)
@@ -34,11 +34,11 @@ function handleFrameMousemove (offsetX: number, offsetY: number) {
 }
 
 function handlePageMousemove (evt: { clientX: number; clientY: number; }) {
-    // let myIframe = document.getElementById("FuntvGalleryHelper")
+    let myIframe = document.getElementById("FuntvGalleryHelper")
     frameTop += evt.clientX - pageMouseX
     frameLeft += evt.clientY - pageMouseY
-    // myIframe.style.top = frameTop + 'px'
-    // myIframe.style.left = frameLeft + 'px'
+    myIframe.style.top = frameTop + 'px'
+    myIframe.style.left = frameLeft + 'px'
   
     // 新位置直接可以更新
     pageMouseX = evt.clientX
@@ -115,7 +115,7 @@ function preview(src: string, msz: string){
     }
 }
 
-function getBase64Image(img){
+function getBase64Image(img:HTMLImageElement){
     var canvas = document.createElement("canvas");
     canvas.width = img.width
     canvas.height = img.height
