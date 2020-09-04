@@ -1,15 +1,15 @@
 import ajax from './util';
 
-let imgarrs
+let imgarrs: string | any[]
 let itemsToBeLoaded = 0
 let timeoutID = null;
 // var serverip = "http://172.17.3.201/"
 // let serverip = "http://172.17.7.11:8000/"
 let serverip = "http://172.17.5.90/"
 
-let baseMouseX, baseMouseY = 0
+let baseMouseX: number, baseMouseY: number
 
-function handleDragStart (evt) {
+function handleDragStart (evt: { clientX: number; clientY: number; }) {
     // console.info(evt.clientX, evt.clientY)
     var obj = document.elementFromPoint(evt.clientX, evt.clientY);
     if (obj.tagName.toLowerCase() === 'input') {
@@ -27,13 +27,15 @@ function handleDragStart (evt) {
     document.addEventListener('mousemove', handleMousemove)
 }
   
-function handleMousemove (evt) {
-    arguments[0].preventDefault();
-    window.parent.postMessage({
-        cmd: 'SALADICT_DRAG_MOUSEMOVE',
-        offsetX: evt.clientX - baseMouseX,
-        offsetY: evt.clientY - baseMouseY
-    }, '*') 
+function handleMousemove (evt: { clientX: number; clientY: number; }) {
+    if(arguments[0].buttons == 1){
+        arguments[0].preventDefault();
+        window.parent.postMessage({
+            cmd: 'SALADICT_DRAG_MOUSEMOVE',
+            offsetX: evt.clientX - baseMouseX,
+            offsetY: evt.clientY - baseMouseY
+        }, '*') 
+    }
 }
   
 function handleDragEnd () {
@@ -43,14 +45,6 @@ function handleDragEnd () {
       cmd: 'SALADICT_DRAG_END'
     }, '*')
 }
-
-
-// //格式化参数
-// function formatParams(data) {
-//     var arr = [];
-//     arr.push("q=" + data)
-//     return arr;
-// }
 
 function sendClose(){
     sendMsg("removeInjected", "")
@@ -79,12 +73,12 @@ function switchShow(){
     }
 }
 
-function sendMsg(cmd, data){
+function sendMsg(cmd: string, data: string){
     window.parent.postMessage({cmd: cmd, data: data}, '*');
 }
 
-function getItemNum(res){
-    let num
+function getItemNum(res: { total: any; count: any; }){
+    let num: number 
     if (res.total){
         num = res.total
     }else if(res.count){
@@ -200,7 +194,7 @@ function checkInfo(event:KeyboardEvent){
     }
 }
 
-function waterfall(imgarrs){
+function waterfall(imgarrs: string | any[]){
     if (itemsToBeLoaded == 0){
         return
     }

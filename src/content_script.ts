@@ -1,10 +1,11 @@
 import ajax from './util';
 
-let pageMouseX, pageMouseY
+
+let pageMouseX: number, pageMouseY: number
 let frameTop = 0
 let frameLeft = 0
 
-function dragStart (mouseX, mouseY) {
+function dragStart (mouseX: any, mouseY: any) {
     let myIframe = document.getElementById("FuntvGalleryHelper")
     frameTop = myIframe.offsetTop
     frameLeft = myIframe.offsetLeft
@@ -14,27 +15,26 @@ function dragStart (mouseX, mouseY) {
   
     document.addEventListener('mouseup', dragEnd)
     document.addEventListener('mousemove', handlePageMousemove)
-  }
+}
   
-  function dragEnd () {
+function dragEnd () {
     document.removeEventListener('mouseup', dragEnd)
     document.removeEventListener('mousemove', handlePageMousemove)
-  }
+}
   
-  function handleFrameMousemove (offsetX, offsetY) {
+function handleFrameMousemove (offsetX: number, offsetY: number) {
     let myIframe = document.getElementById("FuntvGalleryHelper")
     frameTop += offsetY 
     frameLeft += offsetX 
     myIframe.style.top = frameTop + 'px'
     myIframe.style.left = frameLeft + 'px'
-  
     // 更新鼠标在上层的位置，补上偏移
     pageMouseX += offsetX
     pageMouseY += offsetY
-  }
+}
 
-  function handlePageMousemove (evt) {
-    let myIframe = document.getElementById("FuntvGalleryHelper")
+function handlePageMousemove (evt: { clientX: number; clientY: number; }) {
+    // let myIframe = document.getElementById("FuntvGalleryHelper")
     frameTop += evt.clientX - pageMouseX
     frameLeft += evt.clientY - pageMouseY
     // myIframe.style.top = frameTop + 'px'
@@ -43,9 +43,9 @@ function dragStart (mouseX, mouseY) {
     // 新位置直接可以更新
     pageMouseX = evt.clientX
     pageMouseY = evt.clientY
-  }
+}
 
-function reinitIframe(height){
+function reinitIframe(height: string){
     let myIframe = document.getElementById("FuntvGalleryHelper") as HTMLIFrameElement
     myIframe.height = height
 }
@@ -100,7 +100,7 @@ function addModal(){
     }
 }
 
-function preview(src, msz){
+function preview(src: string, msz: string){
     let modal = document.getElementById('FuntvModalDiv');
     (<HTMLIFrameElement>document.getElementById("funtv-modal-content")).src = src
     console.info(src)
@@ -127,7 +127,7 @@ function getBase64Image(img){
     return dataURL;
 }
 
-function save_still(id, stillUrl){
+function save_still(id: string, stillUrl: any){
     let params = {
         id: id,
         still: stillUrl,
@@ -144,7 +144,7 @@ function save_still(id, stillUrl){
     });	
 }
 
-function exchange(data){
+function exchange(data: string){
     var img = new Image();
     img.crossOrigin = "";
     img.src = data
@@ -174,7 +174,7 @@ function exchange(data){
             // error: function(request) {
             //     alert("上传失败");
             // },
-            success: function(data) {
+            success: function(data: string) {
                 var obj = null;
                 try{
                     obj = JSON.parse( data );
