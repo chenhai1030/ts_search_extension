@@ -27,22 +27,19 @@ function handleDragStart (evt: { clientX: number; clientY: number; }) {
 }
   
 function handleMousemove (evt: { clientX: number; clientY: number; }) {
-    if(arguments[0].buttons == 1){
-        arguments[0].preventDefault();
         window.parent.postMessage({
             cmd: 'SALADICT_DRAG_MOUSEMOVE',
             offsetX: evt.clientX - baseMouseX,
             offsetY: evt.clientY - baseMouseY
         }, '*') 
-    }
 }
   
 function handleDragEnd () {
-    document.removeEventListener('mouseup', handleDragEnd)
-    document.removeEventListener('mousemove', handleMousemove)
     window.parent.postMessage({
       cmd: 'SALADICT_DRAG_END'
     }, '*')
+    document.removeEventListener('mouseup', handleDragEnd)
+    document.removeEventListener('mousemove', handleMousemove)
 }
 
 function sendClose(){
