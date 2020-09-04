@@ -1,0 +1,474 @@
+.st-current {
+    outline: 1px dashed blue !important;
+}
+
+.st-hover {
+    outline: 1px dashed red !important;
+}
+
+.st-inspector {
+    /* opacity: .4; */
+    border: none !important;
+    position: fixed !important;
+    width: 350px !important;
+    /* height: 80px ; */
+    /* top: 12px !important; */
+    top: 12px ;
+    right: 12px !important;
+    /* z-index: 2147483647 !important; */
+    z-index: 100;
+}
+/* .st-inspector:hover {
+    opacity: 1.0; 
+} */
+
+.st-inspector iframe {
+    width: 100%;
+    height: 100%;
+    outline: none !important;
+    border: none !important;
+}
+
+/* .st-inspector:before {
+    display: block;
+    content: ' ';
+    width: 100px;
+    left: 132px;
+    top: 38px;
+    cursor: all-scroll;
+    position: absolute;
+    height: 36px;
+} */
+
+.st-inspector.draggable:before {
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.colorTheme.dark {
+    --background-common: #1A1A1A;
+    --background-common-hover: #333;
+    --clipper-border-color: #333;
+    --scrollbar-background-color: #333;
+    --scrollbar-thumb-color: white;
+    --active-element-border-color: white;
+    --minimize-icon-color: #B5B8BE;
+    --minimize-icon-hover-color: #8c919a;
+    --close-icon-color: #B5B8BE;
+    --close-icon-hover-color: #8c919a;
+    --section-title-color: #9EA8B1;
+    --title-field-text-color: white;
+    --clip-type-list-item-selected-background-color: #333;
+    --clip-type-list-item-color: white;
+    --clip-type-list-item-icon-color: #B5B8BE;
+    --clip-type-list-item-check-icon-color: white;
+    --notebook-selector-button-border-color: #333;
+    --notebook-selector-button-background-color: #1A1A1A;
+    --notebook-selector-button-border-hover-color: white;
+    --notebook-selector-button-title-color: white;
+    --notebook-selector-button-caret-color: #B5B8BE;
+    --notebook-selector-spinner-color: white;
+    --notebook-selector-dropdown-border-color: #858F97;
+    --notebook-selector-dropdown-item-hover-background: #333;
+    --notebook-selector-dropdown-item-color: white;
+    --notebook-selector-dropdown-item-icon-color: #B5B8BE;
+    --notebook-selector-dropdown-item-check-color: #B5B8BE;
+    --search-input-icon-color: #858F97;
+    --search-input-text-color: white;
+    --search-input-text-placeholder-color: #858F97;
+    --create-notebook-icon-color: #858F97;
+    --create-notebook-input-text-color: white;
+    --create-notebook-input-text-placeholder-color: #858F97;
+    --create-notebook-cancel-button-border-color: white;
+    --create-notebook-cancel-button-hover-border-color: #d9d9d9;
+    --create-notebook-cancel-button-text-color: white;
+    --notebook-category-header-text-color: white;
+    --notebook-category-header-icon-color: #B5B8BE;
+    --refresh-notebooks-text-color: white;
+    --refresh-notebooks-button-color: #00A82D;
+    --tag-input-text-color: white;
+    --tag-input-text-placeholder-color: #858F97;
+    --tag-input-border-color: #333;
+    --tag-input-border-hover-color: white;
+    --autosuggest-background-color: #1A1A1A;
+    --autosuggest-border-color: #333;
+    --autosuggest-text-color: white;
+    --autosuggest-item-hover-background-color: #333;
+    --tag-list-item-background-color: #333;
+    --tag-list-item-text-color: white;
+    --tag-list-item-remove-button-color: #B5B8BE;
+    --tag-list-item-remove-button-hover-color: #B5B8BE;
+    --remark-input-text-color: white;
+    --remark-input-text-placeholder-color: #858F97;
+    --clipper-tooltip-border-top-color: #333;
+    --settings-button-label-color: #DADDE3;
+    --settings-button-label-hover-color: #aeb5c2;
+    --settings-button-icon-color: #B5B8BE;
+    --clipper-warning-border-color: #333;
+    --clipper-warning-backgound-color: #333;
+    --clipper-warning-header-color: white;
+    --clipper-warning-message-color: white;
+    --clipper-warning-button-color: #00A82D;
+    --clipper-warning-button-hover-color: #008F26;
+    --account-selector-text-color: white;
+    --account-selector-caret-icon-color: #B5B8BE;
+    --account-dropdown-border-color: #333;
+    --account-dropdown-item-text-color: white;
+    --account-dropdown-item-hover-background-color: #333;
+    --account-dropdown-check-icon-color: white;
+    --skitch-tool--container-top-border-color: #333;
+    --skitch-tool-border-color: #333;
+    --skitch-tool-hover-border-color: white;
+    --skitch-tool-icon-color: #B5B8BE;
+    --skitch-tool-expandable-color: #B5B8BE;
+    --skitch-tool-subtools-background-color: #333;
+    --skitch-tool-circle-color:#b5b8be;
+    --skitch-tool-circle-background-color:#1A1A1A;
+    --clip-progress-spinner-color: white;
+    --clip-progress-status-color: white;
+    --clip-progress-percentage-color: #888;
+    --clip-error-text-color: white;
+    --clip-result-status-icon-color: white;
+    --clip-result-status-text-color: white;
+    --reminder-icon-color: #B5B8BE;
+    --reminder-icon-added-color: #008F26;
+    --reminder-icon-hover-color: white;
+    --reminder-icon-added-hover-color: #00A82D;
+    --reminder-dropdown-background-color: #1A1A1A;
+    --reminder-dropdown-border-color: black;
+    --reminder-dropdown-text-color: white;
+    --reminder-button: #333;
+    --reminder-button-radius: #333;
+    --reminder-datapicer-background: #0c0c0c;
+    --reminder-datapicer-border-color: black;
+    --reminder-header-background: #333;
+    --reminder-border-color: black;
+    --reminder-header-text-color: white;
+    --reminder-day-name-color: #858f97;
+    --reminder-day: rgba(204, 204, 204, 1);
+    --reminder-day-disabled: rgba(204, 204, 204, 0.3);
+    --time-container-border-color: var(--reminder-border-color);
+    --reminder-header-border-radius: 0;
+    --time-header-color: white;
+    --reminder-time-background: #0c0c0c;
+    --reminder-time:rgba(204, 204, 204, 1);
+    --time-list-item-hover: #333;
+    --reminder-day-color-hover: white;
+    --reminder-day-backgound-hover: #333;
+    --share-icon-color: #B5B8BE;
+    --share-dropdown-background-color: #1A1A1A;
+    --share-dropdown-border-color: #333;
+    --share-dropdown-background-hover-color: #333;
+    --share-dropdown-icon-color: #B5B8BE;
+    --share-dropdown-text-color: white;
+    --share-frame-title-color: white;
+    --share-frame-background-color: rgba(42, 51, 60, 0.8);
+    --share-copy-url-input-border-color: #333;
+    --share-copy-url-input-text-color: white;
+    --share-copy-url-copied-text-color: #858F97;
+    --share-email-input-border-color: #333;
+    --share-email-input-text-color: white;
+    --share-email-input-placeholder-color: #858F97;
+    --share-frame-button-disabled-color: #333;
+    --share-icon-hover-color: white;
+    --delete-clip-text-color: #858F97;
+    --delete-clip-text-hover-color: white;
+    --clipper-result-tabs-border-top-color: #333;
+    --tab-label-color: white;
+    --tab-active-label-color: #d9d9d9;
+    --tab-note-title-color: #DADDE3;
+    --tab-note-snippet-color: #858F97;
+    --tab-note-snippet-hover-color: #5f6970;
+    --scroll-container-background-color: #1A1A1A;
+    --settings-title-color: white;
+    --settings-spinner-color: white;
+    --settings-logo-elephant-color: white;
+    --settings-logo-title-color: white;
+    --navigator-border-color: #333;
+    --navigator-text-color: #858F97;
+    --logout-button-border-color: #333;
+    --logout-button-text-color: #858F97;
+    --logout-button-hover-color: white;
+    --settings-section-text-color: #9EA8B1;
+    --checkbox-border-color: #EDEDED;
+    --radio-border-color: #EDEDED;
+    --settings-tag-selector-placeholder-text-color: #858F97;
+    --settings-tag-selector-border-color: #858F97;
+    --settings-tag-selector-focus-border-color: white;
+    --settings-tag-selector-text-color: white;
+    --clip-format-selector-background-color: #1A1A1A;
+    --clip-format-selector-border-color: #333;
+    --clip-format-selector-border-hover-color: white;
+    --clip-format-selector-caret-color: #B5B8BE;
+    --clip-format-selector-item-hover-background: #333;
+    --clip-format-selector-item-text-color: white;
+    --clip-format-selector-dropdown-item-icon-color: white;
+    --settings-toolbar-border-color: #333;
+    --settings-toolbar-background-color: #333;
+    --settings-toolbar-text-color: #858F97;
+    --settings-toolbar-url-color: #858F97;
+    --settings-toolbar-url-hover-color: white;
+    --shortcuts-reset-button-text-color: #858F97;
+    --shortcuts-reset-button-border-color: #333;
+    --shortcuts-reset-button-hover-color: white;
+    --shortcuts-section-title-color: #9EA8B1;
+    --shortcuts-input-title-color: white;
+    --shortcuts-input-border-color: #333;
+    --shortcuts-input-background-color: #1A1A1A;
+    --shortcuts-input-text-color: white;
+    --shortcuts-input-hover-border-color: white;
+    --legal-text-color: #858F97;
+    --privacy-policy-text-color: #858F97;
+    --logs-log-text-color: #858F97; }
+  
+  .colorTheme.light {
+    --background-common: white;
+    --background-common-hover: #f2f2f2;
+    --clipper-border-color: #E4E4E4;
+    --scrollbar-background-color: #E4E4E4;
+    --scrollbar-thumb-color: #A0A0A0;
+    --active-element-border-color: #A0A0A0;
+    --minimize-icon-color: #A0A0A0;
+    --minimize-icon-hover-color: #7a7a7a;
+    --close-icon-color: #A0A0A0;
+    --close-icon-hover-color: #7a7a7a;
+    --section-title-color: #7A8083;
+    --title-field-text-color: #333;
+    --clip-type-list-item-selected-background-color: #F0F1F1;
+    --clip-type-list-item-color: #333;
+    --clip-type-list-item-icon-color: #7A8083;
+    --clip-type-list-item-check-icon-color: #00A82D;
+    --notebook-selector-button-border-color: #E4E4E4;
+    --notebook-selector-button-background-color: white;
+    --notebook-selector-button-border-hover-color: #A0A0A0;
+    --notebook-selector-button-title-color: #333;
+    --notebook-selector-button-caret-color: #A0A0A0;
+    --notebook-selector-spinner-color: #00A82D;
+    --notebook-selector-dropdown-border-color: #C3C3C3;
+    --notebook-selector-dropdown-item-hover-background: #F0F1F1;
+    --notebook-selector-dropdown-item-color: #333;
+    --notebook-selector-dropdown-item-icon-color: #7A8083;
+    --notebook-selector-dropdown-item-check-color: #00A82D;
+    --search-input-icon-color: #C3C3C3;
+    --search-input-text-color: #333;
+    --search-input-text-placeholder-color: #A0A0A0;
+    --create-notebook-icon-color: #C3C3C3;
+    --create-notebook-input-text-color: #333;
+    --create-notebook-input-text-placeholder-color: #A0A0A0;
+    --create-notebook-cancel-button-border-color: #A0A0A0;
+    --create-notebook-cancel-button-hover-border-color: #7a7a7a;
+    --create-notebook-cancel-button-text-color: #A0A0A0;
+    --notebook-category-header-text-color: #333;
+    --notebook-category-header-icon-color: #7A8083;
+    --refresh-notebooks-text-color: #333;
+    --refresh-notebooks-button-color: #00A82D;
+    --tag-input-text-color: #333;
+    --tag-input-text-placeholder-color: #A0A0A0;
+    --tag-input-border-color: #E4E4E4;
+    --tag-input-border-hover-color: #A0A0A0;
+    --autosuggest-background-color: white;
+    --autosuggest-border-color: #E4E4E4;
+    --autosuggest-text-color: #333;
+    --autosuggest-item-hover-background-color: #F0F1F1;
+    --tag-list-item-background-color: #F0F1F1;
+    --tag-list-item-text-color: #333;
+    --tag-list-item-remove-button-color: #B5B8BE;
+    --tag-list-item-remove-button-hover-color: #B5B8BE;
+    --remark-input-text-color: #333;
+    --remark-input-text-placeholder-color: #A0A0A0;
+    --clipper-tooltip-border-top-color: #EDEDED;
+    --settings-button-label-color: #A0A0A0;
+    --settings-button-label-hover-color: #7a7a7a;
+    --settings-button-icon-color: #C3C3C3;
+    --clipper-warning-border-color: #E4E4E4;
+    --clipper-warning-backgound-color: #FAFAFA;
+    --clipper-warning-header-color: #7A8083;
+    --clipper-warning-message-color: #7A8083;
+    --clipper-warning-button-color: #00A82D;
+    --clipper-warning-button-hover-color: #008F26;
+    --account-selector-text-color: #333;
+    --account-selector-caret-icon-color: #A0A0A0;
+    --account-dropdown-border-color: #E4E4E4;
+    --account-dropdown-item-text-color: #333;
+    --account-dropdown-item-hover-background-color: #E4E4E4;
+    --account-dropdown-check-icon-color: #00A82D;
+    --skitch-tool--container-top-border-color: #EDEDED;
+    --skitch-tool-border-color: #E4E4E4;
+    --skitch-tool-hover-border-color: #A0A0A0;
+    --skitch-tool-icon-color: #7A8083;
+    --skitch-tool-expandable-color: #C3C3C3;
+    --skitch-tool-subtools-background-color: #F0F1F1;
+    --skitch-tool-circle-color:#7a8083;
+    --skitch-tool-circle-background-color: #fff;
+    --clip-progress-spinner-color: #00A82D;
+    --clip-progress-status-color: #333;
+    --clip-progress-percentage-color: #BBB;
+    --clip-error-text-color: #333;
+    --clip-result-status-icon-color: #00A82D;
+    --clip-result-status-text-color: #333;
+    --reminder-icon-color: #7A8083;
+    --reminder-icon-added-color: #008F26;
+    --reminder-icon-hover-color: #333;
+    --reminder-icon-added-hover-color: #007620;
+    --reminder-dropdown-background-color: #ECECEC;
+    --reminder-dropdown-border-color: #AAAAAA;
+    --reminder-dropdown-text-color: #4C4C4C;
+    --reminder-button: #FAFAFA;
+    --reminder-button-radius: #D2D2D2;
+    --reminder-datapicer-background: white;
+    --reminder-datapicer-border-color: #aeaeae;
+    --reminder-header-background: #f0f0f0;
+    --reminder-border-color: #aeaeae;
+    --reminder-header-text-color: black;
+    --reminder-day-name-color: black;
+    --reminder-day: black;
+    --reminder-day-disabled: #ccc;
+    --time-container-border-color: #aeaeae;
+    --reminder-header-border-radius: 0.3rem;
+    --time-header-color: black;
+    --reminder-time-background: white;
+    --reminder-time: black;
+    --time-list-item-hover: #f0f0f0;
+    --reminder-day-color-hover: #4C4C4C;
+    --reminder-day-backgound-hover: #f0f0f0;
+    --share-icon-color: #7A8083;
+    --share-dropdown-background-color: white;
+    --share-dropdown-border-color: #E4E4E4;
+    --share-dropdown-background-hover-color: #F0F1F1;
+    --share-dropdown-icon-color: #C3C3C3;
+    --share-dropdown-text-color: #333;
+    --share-frame-title-color: #333;
+    --share-frame-background-color: rgba(255, 255, 255, 0.8);
+    --share-copy-url-input-border-color: #E4E4E4;
+    --share-copy-url-input-text-color: #333;
+    --share-copy-url-copied-text-color: #A0A0A0;
+    --share-email-input-border-color: #E4E4E4;
+    --share-email-input-text-color: #333;
+    --share-email-input-placeholder-color: #A0A0A0;
+    --share-frame-button-disabled-color: #A0A0A0;
+    --share-icon-hover-color: #333;
+    --delete-clip-text-color: #A0A0A0;
+    --delete-clip-text-hover-color: #333;
+    --clipper-result-tabs-border-top-color: #EDEDED;
+    --tab-label-color: #333;
+    --tab-active-label-color: lighen(#333, 15%);
+    --tab-note-title-color: #7A8083;
+    --tab-note-snippet-color: #A0A0A0;
+    --tab-note-snippet-hover-color: #7a7a7a;
+    --scroll-container-background-color: #FAFAFA;
+    --settings-title-color: #333;
+    --settings-spinner-color: #00A82D;
+    --settings-logo-elephant-color: #00A82D;
+    --settings-logo-title-color: black;
+    --navigator-border-color: #EDEDED;
+    --navigator-text-color: #A0A0A0;
+    --logout-button-border-color: #E4E4E4;
+    --logout-button-text-color: #7A8083;
+    --logout-button-hover-color: #333;
+    --settings-section-text-color: #A0A0A0;
+    --checkbox-border-color: #E4E4E4;
+    --radio-border-color: #E4E4E4;
+    --settings-tag-selector-placeholder-text-color: #7A8083;
+    --settings-tag-selector-border-color: #E4E4E4;
+    --settings-tag-selector-focus-border-color: #A0A0A0;
+    --settings-tag-selector-text-color: #333;
+    --clip-format-selector-background-color: white;
+    --clip-format-selector-border-color: #E4E4E4;
+    --clip-format-selector-border-hover-color: #A0A0A0;
+    --clip-format-selector-caret-color: #A0A0A0;
+    --clip-format-selector-item-hover-background: #F0F1F1;
+    --clip-format-selector-item-text-color: #333;
+    --clip-format-selector-dropdown-item-icon-color: #00A82D;
+    --settings-toolbar-border-color: #EDEDED;
+    --settings-toolbar-background-color: white;
+    --settings-toolbar-text-color: #A0A0A0;
+    --settings-toolbar-url-color: #7A8083;
+    --settings-toolbar-url-hover-color: #333;
+    --shortcuts-reset-button-text-color: #7A8083;
+    --shortcuts-reset-button-border-color: #E4E4E4;
+    --shortcuts-reset-button-hover-color: #333;
+    --shortcuts-section-title-color: #A0A0A0;
+    --shortcuts-input-title-color: #333;
+    --shortcuts-input-border-color: #E4E4E4;
+    --shortcuts-input-background-color: white;
+    --shortcuts-input-text-color: #7A8083;
+    --shortcuts-input-hover-border-color: #A0A0A0;
+    --legal-text-color: #7A8083;
+    --privacy-policy-text-color: #7A8083;
+    --logs-log-text-color: #7A8083; }
+
+.helperContainer {
+    position: relative;
+    top: 0;
+    right: 0;
+    background-color: var(--background-common);
+    border: 2px solid var(--clipper-border-color);
+    margin-left: 6px;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.05) -3px 3px 3px -1px;
+}
+.minimizeButton.maximizeButtonIcon {
+    -webkit-mask-image: url(./res/maximize.svg);
+    mask-image: url(./res/maximize.svg);
+}
+.minimizeButton {
+    flex-shrink: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    position: absolute;
+    right: 40px;
+    top: 16px;
+    z-index: 1;
+    background-color: var(--minimize-icon-color);
+}
+.closeButton.closeSidebar {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    z-index: 1;
+}
+.closeButton {
+    cursor: pointer;
+}
+.closeButton .closeButtonIcon {
+    flex-shrink: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    -webkit-mask-image: url(./res/close.svg);
+    mask-image: url(./res/close.svg);
+    background-color: var(--close-icon-color);
+}
+.HelpTools {
+    padding-left: 15px;
+    padding-right: 15px;
+    /* padding-bottom: 16px; */
+    width: 296px;
+}
+.TitleField {
+    font-family: ClipperSoleil, "Helvetica Neue", "Lucida Grande", sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 140%;
+    color: var(--title-field-text-color);
+    width: 80%;
+    height: 24px;
+    border-radius: 4px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding: 0 4px 0 3px;
+    user-select: text; 
+}
+.imgContainer{
+    padding-top: 16px;
+    margin-left: 7px;
+    /* border-top: 1px solid var(--clipper-tooltip-border-top-color); */
+    /* border: 2px solid var(--clipper-border-color); */
+    background-color: var(--background-common);
+}

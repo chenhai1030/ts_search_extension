@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title>Funtv Gallery Helper</title>
+	<base target="_blank" />
+	<!-- Dynamically fetch correct stylesheets (e.g. for RTL) -->
+	<!-- <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script> -->
+	<script type="text/javascript" src="js/inject_script.js"></script>
+	<link rel=stylesheet type="text/css" href="styles/page.css">
+</head>
+<body style="overflow: hidden; position:fixed;">
+	<div style="position: absolute; top: 0; left: 0;">
+		<div class="colorTheme light">
+			<div class="helperContainer">
+				<div id="switchShow" tabindex="0" class="minimizeButton maximizeButtonIcon"></div>
+				<div class="closeButton closeSidebar" tabindex="0">
+					<div id="close" class="closeButtonIcon"></div>
+				</div>
+				<div id="funtv-dragarea" class="HelpTools" style="cursor: move;">
+					<section class="titleSection">
+						<input id="TitleField" name="searchInput" class="TitleField" placeholder="搜索" maxlength="255" value="">
+					</section>
+				</div>
+				<div style="overflow:hidden;">
+					<div id="imgContainer" class="imgContainer" style="display:block">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

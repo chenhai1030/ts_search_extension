@@ -4,6 +4,7 @@
   "description": "chrome-extension-typescript-starter",
   "main": "index.js",
   "scripts": {
+    "dev": "NODE_ENV=development webpack --config webpack/webpack.dev.js --mode=development --watch ",
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist",
