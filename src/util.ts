@@ -1,4 +1,4 @@
-export default function ajax(options: { type?: any; dataType?: any; data?: any; success?: any; fail?: any; url?: any; }) {
+export default function oriAjax(options: { type?: any; dataType?: any; data?: any; success?: any; fail?: any; url?: any; }) {
     options = options || {};
     options.type = (options.type || "GET").toUpperCase();
     options.dataType = options.dataType || "json";

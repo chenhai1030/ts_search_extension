@@ -1,4 +1,4 @@
-import ajax from './util';
+import oriAjax from './util';
 
 let imgarrs: string | any[]
 let itemsToBeLoaded = 0
@@ -170,7 +170,7 @@ function checkInfo(event:KeyboardEvent){
     //enter pressed
     if (event.keyCode == 13) {
         let keyword = (<HTMLInputElement>document.querySelector('[name="searchInput"]')).value
-        ajax({
+        oriAjax({
             url: serverip + "api/search",     //request path
             type: "GET",                       //request type
             data: keyword,                      //request param

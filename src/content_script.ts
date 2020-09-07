@@ -1,4 +1,4 @@
-import ajax from './util';
+import oriAjax from './util';
 
 
 let pageMouseX: number, pageMouseY: number
@@ -115,7 +115,7 @@ function preview(src: string, msz: string){
     }
 }
 
-function getBase64Image(img:HTMLImageElement){
+function getBase64Image(img){
     var canvas = document.createElement("canvas");
     canvas.width = img.width
     canvas.height = img.height
@@ -132,7 +132,7 @@ function save_still(id: string, stillUrl: any){
         id: id,
         still: stillUrl,
     }
-    ajax({
+    oriAjax({
         type: "POST",
         url: "/ajaxa/post/save_still",
         data: params,
@@ -167,7 +167,7 @@ function exchange(data: string){
             filetype: ext,
             image: base64.substring(base64.lastIndexOf(",")+1),
         }
-        ajax({
+        oriAjax({
             type: "POST",
             url:"/ajaxa/post/upload_pic",
             data:params,
@@ -175,6 +175,7 @@ function exchange(data: string){
             //     alert("上传失败");
             // },
             success: function(data: string) {
+                console.info(data)
                 var obj = null;
                 try{
                     obj = JSON.parse( data );
