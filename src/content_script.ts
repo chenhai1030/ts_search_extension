@@ -1,4 +1,4 @@
-import oriAjax from './util';
+import ajax from './util';
 
 
 let pageMouseX: number, pageMouseY: number
@@ -48,6 +48,13 @@ function handlePageMousemove (evt: { clientX: number; clientY: number; }) {
 function reinitIframe(height: string){
     let myIframe = document.getElementById("FuntvGalleryHelper") as HTMLIFrameElement
     myIframe.height = height
+}
+
+function resizeIframe(width: number, height: number){
+    let myIframe = document.getElementById("FuntvGalleryHelper") as HTMLIFrameElement
+    myIframe.width = width + 20 + 'px'
+    myIframe.height = height + 20 + 'px'
+    // console.info(myIframe.width, myIframe.height)
 }
 
 function removeInjected(){
@@ -115,7 +122,7 @@ function preview(src: string, msz: string){
     }
 }
 
-function getBase64Image(img){
+function getBase64Image(img:HTMLImageElement){
     var canvas = document.createElement("canvas");
     canvas.width = img.width
     canvas.height = img.height
@@ -132,7 +139,7 @@ function save_still(id: string, stillUrl: any){
         id: id,
         still: stillUrl,
     }
-    oriAjax({
+    ajax({
         type: "POST",
         url: "/ajaxa/post/save_still",
         data: params,
@@ -167,7 +174,7 @@ function exchange(data: string){
             filetype: ext,
             image: base64.substring(base64.lastIndexOf(",")+1),
         }
-        oriAjax({
+        ajax({
             type: "POST",
             url:"/ajaxa/post/upload_pic",
             data:params,
@@ -209,6 +216,9 @@ function exchange(data: string){
             case 'reinitIframe':
                 reinitIframe(e.data.data)	
                 break
+            case 'resizeIframe':
+                resizeIframe(data.width, data.height)    
+                break    
             case 'removeInjected':
                 removeInjected() 
                 break
@@ -229,6 +239,13 @@ function exchange(data: string){
                 break
         }
     }, false);
+
+    // chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
+    // {
+    //     // console.log(sender.tab ?"from a content script:" + sender.tab.url :"from the extension");
+    //     if(request.cmd == 'upload') alert(request.value);
+    //     // sendResponse('我收到了你的消息！');
+    // });
 }();
 
 

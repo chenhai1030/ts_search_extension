@@ -10,7 +10,7 @@
     /* opacity: .4; */
     border: none !important;
     position: fixed !important;
-    width: 350px !important;
+    min-width: 360px ;
     /* height: 80px ; */
     /* top: 12px !important; */
     top: 12px ;
@@ -408,6 +408,18 @@
     margin-left: 6px;
     border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.05) -3px 3px 3px -1px;
+}
+.helperContainer #resizeOp{
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    border:3px solid transparent;
+    border-right:3px solid black;
+    border-bottom:3px solid black;
+}
+#resizeOp:hover {
+    cursor: cell;
 }
 .minimizeButton.maximizeButtonIcon {
     -webkit-mask-image: url(./res/maximize.svg);

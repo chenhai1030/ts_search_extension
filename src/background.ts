@@ -1,5 +1,29 @@
 
 'use strict';
+function sendMessageToContentScript(message, callback)
+{
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs)
+	{
+		chrome.tabs.sendMessage(tabs[0].id, message, function(response)
+		{
+			if(callback) callback(response);
+		});
+	});
+}
+
+chrome.contextMenus.create({
+    title: "保存到图库",
+    contexts: ['image'],
+    onclick: function(){
+        chrome.tabs.executeScript({
+            file: 'js/upload.js'
+        });
+        // sendMessageToContentScript({
+        //     cmd:"upload",
+        //     value:"nihao"
+        // }, null)
+    }
+});
 /* global chrome */
 chrome.browserAction.onClicked.addListener(function () {
     chrome.tabs.executeScript({
@@ -12,6 +36,7 @@ chrome.browserAction.onClicked.addListener(function () {
         file: 'styles/modal.css'
     });
 });
+
 
 // chrome.webRequest.onBeforeRequest.addListener(function (details) {
 //         return {redirectUrl: chrome.extension.getURL("js/jquery-2.2.1.js")}

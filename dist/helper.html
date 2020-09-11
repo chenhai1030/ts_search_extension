@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" >
 <head>
 	<meta charset="utf-8" />
 	<title>Funtv Gallery Helper</title>
@@ -10,23 +10,24 @@
 	<script type="text/javascript" src="js/inject_script.js"></script>
 	<link rel=stylesheet type="text/css" href="styles/page.css">
 </head>
-<body style="overflow: hidden; position:fixed;">
-	<div style="position: absolute; top: 0; left: 0;">
+<body style="position:fixed;width: 95%; ">
+	<div style="position: absolute; top: 0; left: 0;width: 95%; ">
 		<div class="colorTheme light">
-			<div class="helperContainer">
+			<div class="helperContainer" >
 				<div id="switchShow" tabindex="0" class="minimizeButton maximizeButtonIcon"></div>
 				<div class="closeButton closeSidebar" tabindex="0">
 					<div id="close" class="closeButtonIcon"></div>
 				</div>
-				<div id="funtv-dragarea" class="HelpTools" style="cursor: move;">
-					<section class="titleSection">
+				<div id="funtv-dragarea" class="HelpTools" style="cursor: move;width: 100%;">
+					<section class="titleSection" style="max-width: 80%; min-width: 135px;">
 						<input id="TitleField" name="searchInput" class="TitleField" placeholder="搜索" maxlength="255" value="">
 					</section>
 				</div>
-				<div style="overflow:hidden;">
-					<div id="imgContainer" class="imgContainer" style="display:block">
+				<div style="overflow:auto;">
+					<div id="imgContainer" class="imgContainer" style="display:block;">
 					</div>
 				</div>
+				<div id="resizeOp" style="width: 5px; height: 5px;"></div>
 			</div>
 		</div>
 	</div>
