@@ -234,6 +234,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 document.addEventListener('DOMContentLoaded', function(){
+    let imgDiv = document.getElementById("imgContainer") as HTMLDivElement 
     let resizeDiv = document.getElementsByClassName('helperContainer')[0] as HTMLDivElement
     let opDiv = document.getElementById('resizeOp') as HTMLDivElement
     let disX = 0
@@ -255,8 +256,10 @@ document.addEventListener('DOMContentLoaded', function(){
             // console.info("CH:", l, t)
             resizeDiv.style.width = l + 'px'
             resizeDiv.style.height = t + 'px'
+            imgDiv.style.height = t - 20 + 'px'
             handleResizeIframe(l, t)
         }
+        waterfall(imgarrs)
         return false
     }
     document.onmouseup = opDiv.onmouseup = function(ev){
