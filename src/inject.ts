@@ -27,10 +27,11 @@ function handleDragStart (evt: { clientX: number; clientY: number; }) {
     }, '*') 
     document.addEventListener('mousemove', handleMousemove)
     document.addEventListener('mouseup', handleDragEnd)
+    return false
 }
   
 function handleMousemove (evt: { clientX: number; clientY: number; }) {
-    if(!bMove) return
+    if(!bMove) return false
     window.parent.postMessage({
         cmd: 'SALADICT_DRAG_MOUSEMOVE',
         offsetX: evt.clientX - baseMouseX,
@@ -245,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function(){
             ev.returnValue=false;
         }
         document.onmousemove = function(ev){
-            if(!bDrag) return;
+            if(!bDrag) return false;
             var l = ev.clientX - disX;
             var t = ev.clientY - disY; 
             console.info("CH:", l, t)
@@ -258,9 +259,9 @@ document.addEventListener('DOMContentLoaded', function(){
         return false
     }
     opDiv.onmouseup = document.onmouseup = function(ev){
-        document.onmousedown = document.onmousemove = null
         bDrag = false;
-        console.info("mouseUP")
+        document.onmousedown = document.onmousemove = null
+        // console.info("mouseUP")
     }  
 });
 
