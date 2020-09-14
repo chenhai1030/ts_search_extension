@@ -54,7 +54,6 @@ function resizeIframe(width: number, height: number){
     let myIframe = document.getElementById("FuntvGalleryHelper") as HTMLIFrameElement
     myIframe.width = width + 20 + 'px'
     myIframe.height = height + 20 + 'px'
-    // console.info(myIframe.width, myIframe.height)
 }
 
 function removeInjected(){

@@ -3,6 +3,8 @@ import ajax from './util';
 let imgarrs: string | any[]
 let itemsToBeLoaded = 0
 let timeoutID = null;
+let bMove = false;
+let imgCheight: number
 // var serverip = "http://172.17.3.201/"
 // let serverip = "http://172.17.7.141:8000/"
 let serverip = "http://172.17.5.90/"
@@ -10,23 +12,25 @@ let serverip = "http://172.17.5.90/"
 let baseMouseX: number, baseMouseY: number
 
 function handleDragStart (evt: { clientX: number; clientY: number; }) {
+    bMove = true
     // console.info(evt.clientX, evt.clientY)
     var obj = document.elementFromPoint(evt.clientX, evt.clientY);
     if (obj.tagName.toLowerCase() === 'input') {
         return
     }
-    baseMouseX = evt.clientX
+    baseMouseX = evt.clientX  
     baseMouseY = evt.clientY
     window.parent.postMessage({
         cmd: 'SALADICT_DRAG_START',
         mouseX: baseMouseX,
         mouseY: baseMouseY
     }, '*') 
-    document.addEventListener('mouseup', handleDragEnd)
     document.addEventListener('mousemove', handleMousemove)
+    document.addEventListener('mouseup', handleDragEnd)
 }
   
 function handleMousemove (evt: { clientX: number; clientY: number; }) {
+    if(!bMove) return
     window.parent.postMessage({
         cmd: 'SALADICT_DRAG_MOUSEMOVE',
         offsetX: evt.clientX - baseMouseX,
@@ -35,10 +39,10 @@ function handleMousemove (evt: { clientX: number; clientY: number; }) {
 }
   
 function handleDragEnd () {
+    bMove = false
     window.parent.postMessage({
       cmd: 'SALADICT_DRAG_END'
     }, '*')
-    document.removeEventListener('mouseup', handleDragEnd)
     document.removeEventListener('mousemove', handleMousemove)
 }
 
@@ -55,23 +59,13 @@ function sendClose(){
 }
 
 function switchShow(){
-    let imgDiv = document.getElementById("imgContainer")
+    let imgDiv = document.getElementById("imgContainer") as HTMLDivElement
+    // let len = imgDiv.childNodes.length
     if(imgDiv.style.display == "none"){
         imgDiv.style.display = 'block'
-        let imgCheight: string 
-        let len = imgDiv.childNodes.length
-        // console.info("imgs:", len)
-        if (len > 6){
-            imgCheight = "450px"
-        }else if (len >= 3){
-            imgCheight = "320px"
-        }else if (len >= 1){
-            imgCheight = "190px"
-        }else {
-            imgCheight = "80px"
-        }
-        sendMsg("reinitIframe", imgCheight)
+        sendMsg("reinitIframe", imgCheight+100+'px')
     }else{
+        imgCheight = imgDiv.clientHeight
         imgDiv.style.display = 'none'
         sendMsg("reinitIframe", "80px")
     }
@@ -169,7 +163,7 @@ function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
 
     let len = imgDiv.childNodes.length
     if (len){
-        sendMsg("reinitIframe", imgDiv.clientHeight + 100 + 'px')
+        sendMsg("reinitIframe", imgDiv.clientHeight + 80 + 'px')
     }
 }
 
@@ -242,56 +236,31 @@ document.addEventListener('DOMContentLoaded', function(){
     let bDrag = false;
 
     opDiv.onmousedown = function(ev){
-        let oEvent = ev || event as MouseEvent 
         bDrag = true
-        opDiv.setPointerCapture
-        disX = oEvent.clientX - resizeDiv.offsetWidth;
-        disY = oEvent.clientY - resizeDiv.offsetHeight; 
-
+        disX = ev.clientX - resizeDiv.offsetWidth;
+        disY = ev.clientY - resizeDiv.offsetHeight; 
+        if (ev.preventDefault) {
+            ev.preventDefault();
+           } else{
+            ev.returnValue=false;
+        }
         document.onmousemove = function(ev){
             if(!bDrag) return;
-            let oEvent = ev || event as MouseEvent
-            var l = oEvent.clientX - disX;
-            var t = oEvent.clientY - disY; 
-            // console.info("CH:", l, t)
+            var l = ev.clientX - disX;
+            var t = ev.clientY - disY; 
+            console.info("CH:", l, t)
             resizeDiv.style.width = l + 'px'
             resizeDiv.style.height = t + 'px'
-            imgDiv.style.height = t - 20 + 'px'
+            imgDiv.style.height = t - 70 + 'px'
             handleResizeIframe(l, t)
         }
         waterfall(imgarrs)
         return false
     }
-    document.onmouseup = opDiv.onmouseup = function(ev){
+    opDiv.onmouseup = document.onmouseup = function(ev){
+        document.onmousedown = document.onmousemove = null
         bDrag = false;
-        // console.info("mouseUP")
-        //@ts-ignore
-        opDiv.releasePointerCapture
+        console.info("mouseUP")
     }  
-
-    // opDiv.onmousedown = function(ev){
-    //     let oEvent = ev || event as MouseEvent
-    //     disX = oEvent.clientX - resizeDiv.offsetWidth;
-    //     disY = oEvent.clientY - resizeDiv.offsetHeight; 
-        
-    //     (<any>opDiv).setCapture && (<any>opDiv).setCapture();
-    //     console.info((<any>opDiv).setCapture)
-    //     opDiv.onmousemove = function(ev){
-    //         let oEvent = ev || event as MouseEvent
-    //         var l = oEvent.clientX - disX;
-    //         var t = oEvent.clientY - disY; 
-    //         // console.info("CH:", l, t)
-    //         resizeDiv.style.width = l + 'px'
-    //         resizeDiv.style.height = t + 'px'
-    //         handleResizeIframe(l, t)
-    //     }
-    // }
-    // opDiv.onmouseup = function(){
-    //     console.info("mouseUP")
-    //     opDiv.onmousemove = null
-    //     opDiv.onmouseup = null
-    //     //@ts-ignore
-    //     opDiv.releaseCapture && opDiv.releaseCapture();
-    // }
 });
 
