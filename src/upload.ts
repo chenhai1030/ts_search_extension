@@ -1,5 +1,5 @@
 import ajax from './util'
-
+import {serverip} from './util'
 
 +function(){
     let iframes = document.getElementsByTagName("iframe")
@@ -16,7 +16,7 @@ import ajax from './util'
         name: mName.value,
     }
     // let serverip = "http://172.17.3.201/"
-    let serverip = "http://172.17.5.90/"
+    // let serverip = "http://172.17.5.90/"
     ajax({
         url: serverip + "api/upload",     //request path
         type: "POST",                       //request type

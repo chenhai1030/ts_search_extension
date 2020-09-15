@@ -1,3 +1,5 @@
+export const serverip = "http://172.17.3.201/"
+
 export default function ajax(options: { type?: any; dataType?: any; data?: any; success?: any; fail?: any; url?: any; }) {
     options = options || {};
     options.type = (options.type || "GET").toUpperCase();

@@ -1,4 +1,5 @@
 import ajax from './util';
+import {serverip} from './util';
 
 let imgarrs: string | any[]
 let itemsToBeLoaded = 0
@@ -7,7 +8,7 @@ let bMove = false;
 let imgCheight: number
 // let serverip = "http://172.17.3.201/"
 // let serverip = "http://172.17.7.141:8000/"
-let serverip = "http://172.17.5.90/"
+// let serverip = "http://172.17.5.90/"
 
 let baseMouseX: number, baseMouseY: number
 
