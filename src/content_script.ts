@@ -199,7 +199,7 @@ function exchange(data: string){
     if (!myIframe){
         myIframe = document.createElement("iframe")
         myIframe.id = "FuntvGalleryHelper"
-        myIframe.scrolling = "auto"
+        // myIframe.scrolling = "auto"
         myIframe.src = chrome.extension.getURL ('helper.html')
         myIframe.classList.add("st-inspector")
         document.documentElement.appendChild(myIframe)

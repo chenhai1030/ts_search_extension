@@ -234,6 +234,8 @@ document.addEventListener('DOMContentLoaded', function(){
     let opDiv = document.getElementById('resizeOp') as HTMLDivElement
     let disX = 0
     let disY = 0
+    let iframeW = 0
+    let iframeH = 0
     let bDrag = false;
 
     opDiv.onmousedown = function(ev){
@@ -242,26 +244,34 @@ document.addEventListener('DOMContentLoaded', function(){
         disY = ev.clientY - resizeDiv.offsetHeight; 
         if (ev.preventDefault) {
             ev.preventDefault();
-           } else{
+        } else{
             ev.returnValue=false;
         }
+        handleResizeIframe(1920, 1080)
+        
         document.onmousemove = function(ev){
             if(!bDrag) return false;
             var l = ev.clientX - disX;
             var t = ev.clientY - disY; 
-            console.info("CH:", l, t)
+            // console.info("CH:", l, t)
             resizeDiv.style.width = l + 'px'
             resizeDiv.style.height = t + 'px'
             imgDiv.style.height = t - 70 + 'px'
-            handleResizeIframe(l, t)
+            iframeW = l
+            iframeH = t
+            // handleResizeIframe(l, t)
         }
         waterfall(imgarrs)
         return false
     }
     opDiv.onmouseup = document.onmouseup = function(ev){
         bDrag = false;
+        console.info("end:", iframeW, iframeH)
+        if (iframeW > 0 && iframeH > 0){
+            handleResizeIframe(iframeW, iframeH)
+        }
         document.onmousedown = document.onmousemove = null
-        // console.info("mouseUP")
+        console.info("mouseUP")
     }  
 });
 
