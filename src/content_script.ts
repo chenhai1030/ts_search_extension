@@ -152,44 +152,50 @@ function save_still(id: string, stillUrl: any){
 
 function exchange(data: string){
     var img = new Image();
-    img.crossOrigin = "";
-    img.src = data
-    img.onload = function(){
-        let base64 = getBase64Image(img)
-        let iframes = document.getElementsByTagName("iframe")
-        for (let i=0; i<iframes.length; i++){
-            if (iframes[i].dataset.src == "/admin/refine_task"){
-                var contentIframe = document.getElementsByTagName("iframe")[i] 
-            }
+    let iframes = document.getElementsByTagName("iframe")
+    for (let i=0; i<iframes.length; i++){
+        if (iframes[i].dataset.src == "/admin/refine_task"){
+            var contentIframe = document.getElementsByTagName("iframe")[i] 
         }
-        let exDiv = contentIframe.contentWindow.document.getElementsByClassName("img-still mod-editpic")
-        let mImg = exDiv[0].childNodes[2] as HTMLImageElement
-        let id = exDiv[0].attributes[6].nodeValue
-        // console.info(mImg)
-        // mImg.src = data
+    }
+    let exDiv = contentIframe.contentWindow.document.getElementsByClassName("img-still mod-editpic")
+    let mImg = exDiv[0].childNodes[2] as HTMLImageElement
+    let id = exDiv[0].attributes[6].nodeValue
 
-        var ext = data.substring(data.lastIndexOf(".")+1);
-        let params = {
-            filetype: ext,
-            image: base64.substring(base64.lastIndexOf(",")+1),
-        }
-        ajax({
-            type: "POST",
-            url:"/ajaxa/post/upload_pic",
-            data:params,
-            // error: function(request) {
-            //     alert("上传失败");
-            // },
-            success: function(data: string) {
-                console.info(data)
-                var obj = null;
-                try{
-                    obj = JSON.parse( data );
-                }catch(e){};  
-                save_still(id, obj.data.url)
-                mImg.src = obj.data.url 
+    if (data.includes("http://")){
+        save_still(id, data)
+        mImg.src = data
+    }else{
+        img.crossOrigin = "";
+        img.src = data
+        img.onload = function(){
+            let base64 = getBase64Image(img)
+            // console.info(mImg)
+            // mImg.src = data
+
+            var ext = data.substring(data.lastIndexOf(".")+1);
+            let params = {
+                filetype: ext,
+                image: base64.substring(base64.lastIndexOf(",")+1),
             }
-        });
+            ajax({
+                type: "POST",
+                url:"/ajaxa/post/upload_pic",
+                data:params,
+                // error: function(request) {
+                //     alert("上传失败");
+                // },
+                success: function(data: string) {
+                    console.info(data)
+                    var obj = null;
+                    try{
+                        obj = JSON.parse( data );
+                    }catch(e){};  
+                    save_still(id, obj.data.url)
+                    mImg.src = obj.data.url 
+                }
+            });
+        }
     }
 }
 

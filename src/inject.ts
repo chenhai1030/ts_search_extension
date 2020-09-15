@@ -115,7 +115,7 @@ function exChangePic(e){
 function createImg(src:string, i:number){
     let imgDiv = document.getElementById("imgContainer")
     let img = document.createElement("img")
-    if (src.includes("http://img.funshion.com")){
+    if (src.includes("http://")){
         img.src = src
     }else{
         img.src = serverip + src
@@ -153,6 +153,7 @@ function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
                 createImg(imgSrc, i)
             }
         }
+        itemsToBeLoaded = num - shouldLoadNum 
         // if (num === 7){
         //     let img = document.createElement("img")
         //     img.src = serverip + resObj.data[6].imgUrl
@@ -208,8 +209,8 @@ function waterfall(imgarrs: string | any[]){
     if (itemsToBeLoaded == 0){
         return
     }
-    if (imgarrs.length > 7){
-        for(let i=7; i< imgarrs.length; i++){
+    if (imgarrs.length > itemsToBeLoaded){
+        for(let i=imgarrs.length - itemsToBeLoaded ; i< itemsToBeLoaded; i++){
             let imgSrc = imgarrs[i].imgUrl
             createImg(imgSrc, i+1)
         }
