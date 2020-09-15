@@ -6,10 +6,6 @@ let itemsToBeLoaded = 0
 let timeoutID = null;
 let bMove = false;
 let imgCheight: number
-// let serverip = "http://172.17.3.201/"
-// let serverip = "http://172.17.7.141:8000/"
-// let serverip = "http://172.17.5.90/"
-
 let baseMouseX: number, baseMouseY: number
 
 function handleDragStart (evt: { clientX: number; clientY: number; }) {
@@ -154,21 +150,6 @@ function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
             createImg(imgSrc, i)
         }
         itemsToBeLoaded = num - ~~shouldLoadNum -2
-        // if (num === 7){
-        //     let img = document.createElement("img")
-        //     img.src = serverip + resObj.data[6].imgUrl
-        //     img.id = "img7"
-        //     img.style.marginRight="1px"
-        //     img.style.width = "150px"
-        //     img.style.height = "112px"
-        //     imgDiv.appendChild(img)
-        // }
-        // if (shouldLoadNum > 7 && num > 7){
-        //     for(let i=8;i<shouldLoadNum;i++){
-        //         let imgSrc = resObj.data[i-1].imgUrl
-        //         createImg(imgSrc, i)
-        //     }
-        // }
     }
     else{
         imgDiv.style.minHeight = '0px'
@@ -259,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function(){
         } else{
             ev.returnValue=false;
         }
-        handleResizeIframe(1920, 1080)
+        handleResizeIframe(1000, 1080)
         
         document.onmousemove = function(ev){
             if(!bDrag) return false;
@@ -281,6 +262,8 @@ document.addEventListener('DOMContentLoaded', function(){
         bDrag = false;
         if (iframeW > 0 && iframeH > 0){
             handleResizeIframe(iframeW, iframeH)
+        }else{
+            handleResizeIframe(308, 60)
         }
         document.onmousedown = document.onmousemove = null
     }  
