@@ -15,6 +15,7 @@ import ajax from './util'
         url: mImg.currentSrc,
         name: mName.value,
     }
+    // let serverip = "http://172.17.3.201/"
     let serverip = "http://172.17.5.90/"
     ajax({
         url: serverip + "api/upload",     //request path

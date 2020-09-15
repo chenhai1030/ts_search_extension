@@ -5,7 +5,7 @@ let itemsToBeLoaded = 0
 let timeoutID = null;
 let bMove = false;
 let imgCheight: number
-// var serverip = "http://172.17.3.201/"
+// let serverip = "http://172.17.3.201/"
 // let serverip = "http://172.17.7.141:8000/"
 let serverip = "http://172.17.5.90/"
 
@@ -114,7 +114,11 @@ function exChangePic(e){
 function createImg(src:string, i:number){
     let imgDiv = document.getElementById("imgContainer")
     let img = document.createElement("img")
-    img.src = src
+    if (src.includes("http://img.funshion.com")){
+        img.src = src
+    }else{
+        img.src = serverip + src
+    }
     img.id = "img" + i
     img.style.width = "150px"
     img.style.height = "112px"
@@ -133,20 +137,20 @@ function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
     }
 
     if (num >0){
+        let shouldLoadNum = imgDiv.clientHeight*imgDiv.clientWidth/16000
+        if (num >= 5){
+            imgDiv.style.overflowY = 'scroll'
+        }
         for (let i=1; i<=6 && i <= num; i++){
             if(i > 2){
                 imgDiv.style.minHeight = '220px'     
             }else if (i >= 1){
                 imgDiv.style.minHeight = '120px'
             }
-            let imgSrc = serverip + resObj.data[i-1].imgUrl
+            let imgSrc = resObj.data[i-1].imgUrl
             createImg(imgSrc, i)
         }
-        if (num >= 5){
-            // imgDiv.style.height = '350px'
-            imgDiv.style.overflowY = 'scroll'
-        }
-        if (num >= 7){
+        if (num === 7){
             let img = document.createElement("img")
             img.src = serverip + resObj.data[6].imgUrl
             img.id = "img7"
@@ -154,6 +158,12 @@ function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
             img.style.width = "150px"
             img.style.height = "112px"
             imgDiv.appendChild(img)
+        }
+        if (shouldLoadNum > 7 && num > 7){
+            for(let i=8;i<shouldLoadNum;i++){
+                let imgSrc = resObj.data[i-1].imgUrl
+                createImg(imgSrc, i)
+            }
         }
     }
     else{
@@ -197,7 +207,7 @@ function waterfall(imgarrs: string | any[]){
     }
     if (imgarrs.length > 7){
         for(let i=7; i< imgarrs.length; i++){
-            let imgSrc = serverip + imgarrs[i].imgUrl
+            let imgSrc = imgarrs[i].imgUrl
             createImg(imgSrc, i+1)
         }
         // imgarrs.length = 0
