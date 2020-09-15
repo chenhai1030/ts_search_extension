@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function(){
         } else{
             ev.returnValue=false;
         }
-        handleResizeIframe(1000, 1080)
+        handleResizeIframe(1920, 1080)
         
         document.onmousemove = function(ev){
             if(!bDrag) return false;
