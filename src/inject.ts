@@ -141,30 +141,32 @@ function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
         if (num >= 5){
             imgDiv.style.overflowY = 'scroll'
         }
-        for (let i=1; i<=6 && i <= num; i++){
-            if(i > 2){
-                imgDiv.style.minHeight = '220px'     
-            }else if (i >= 1){
-                imgDiv.style.minHeight = '120px'
-            }
-            let imgSrc = resObj.data[i-1].imgUrl
-            createImg(imgSrc, i)
-        }
-        if (num === 7){
-            let img = document.createElement("img")
-            img.src = serverip + resObj.data[6].imgUrl
-            img.id = "img7"
-            img.style.marginRight="1px"
-            img.style.width = "150px"
-            img.style.height = "112px"
-            imgDiv.appendChild(img)
-        }
-        if (shouldLoadNum > 7 && num > 7){
-            for(let i=8;i<shouldLoadNum;i++){
+        if(shouldLoadNum > 0){
+            for (let i=1; i<=shouldLoadNum+2 && i <= num; i++){
+                if(i > 2){
+                    imgDiv.style.minHeight = '220px'     
+                }else if (i >= 1){
+                    imgDiv.style.minHeight = '120px'
+                }
                 let imgSrc = resObj.data[i-1].imgUrl
                 createImg(imgSrc, i)
             }
         }
+        // if (num === 7){
+        //     let img = document.createElement("img")
+        //     img.src = serverip + resObj.data[6].imgUrl
+        //     img.id = "img7"
+        //     img.style.marginRight="1px"
+        //     img.style.width = "150px"
+        //     img.style.height = "112px"
+        //     imgDiv.appendChild(img)
+        // }
+        // if (shouldLoadNum > 7 && num > 7){
+        //     for(let i=8;i<shouldLoadNum;i++){
+        //         let imgSrc = resObj.data[i-1].imgUrl
+        //         createImg(imgSrc, i)
+        //     }
+        // }
     }
     else{
         imgDiv.style.minHeight = '0px'
