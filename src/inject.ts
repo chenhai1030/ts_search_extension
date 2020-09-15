@@ -253,7 +253,8 @@ document.addEventListener('DOMContentLoaded', function(){
             if(!bDrag) return false;
             var l = ev.clientX - disX;
             var t = ev.clientY - disY; 
-            // console.info("CH:", l, t)
+            if ((l < 290) || (t < 65)) return false
+
             resizeDiv.style.width = l + 'px'
             resizeDiv.style.height = t + 'px'
             imgDiv.style.height = t - 70 + 'px'
@@ -266,12 +267,10 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     opDiv.onmouseup = document.onmouseup = function(ev){
         bDrag = false;
-        console.info("end:", iframeW, iframeH)
         if (iframeW > 0 && iframeH > 0){
             handleResizeIframe(iframeW, iframeH)
         }
         document.onmousedown = document.onmousemove = null
-        console.info("mouseUP")
     }  
 });
 
