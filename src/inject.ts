@@ -136,24 +136,24 @@ function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
     for (let i=childs.length -1; i>=0; i--){
         imgDiv.removeChild(childs[i])
     }
-
     if (num >0){
         let shouldLoadNum = imgDiv.clientHeight*imgDiv.clientWidth/16000
         if (num >= 5){
             imgDiv.style.overflowY = 'scroll'
         }
-        if(shouldLoadNum > 0){
-            for (let i=1; i<=shouldLoadNum+2 && i <= num; i++){
-                if(i > 2){
-                    imgDiv.style.minHeight = '220px'     
-                }else if (i >= 1){
-                    imgDiv.style.minHeight = '120px'
-                }
-                let imgSrc = resObj.data[i-1].imgUrl
-                createImg(imgSrc, i)
+        // console.info("nu:", num)
+        // console.info("should",shouldLoadNum )
+        //atleast load 2 imgs
+        for (let i=1; i<=shouldLoadNum+2 && i <= num; i++){
+            if(i > 2){
+                imgDiv.style.minHeight = '220px'     
+            }else if (i >= 1){
+                imgDiv.style.minHeight = '120px'
             }
+            let imgSrc = resObj.data[i-1].imgUrl
+            createImg(imgSrc, i)
         }
-        itemsToBeLoaded = num - shouldLoadNum 
+        itemsToBeLoaded = num - ~~shouldLoadNum -2
         // if (num === 7){
         //     let img = document.createElement("img")
         //     img.src = serverip + resObj.data[6].imgUrl
@@ -206,16 +206,14 @@ function checkInfo(event:KeyboardEvent){
 }
 
 function waterfall(imgarrs: string | any[]){
-    if (itemsToBeLoaded == 0){
-        return
-    }
-    if (imgarrs.length > itemsToBeLoaded){
-        for(let i=imgarrs.length - itemsToBeLoaded ; i< itemsToBeLoaded; i++){
-            let imgSrc = imgarrs[i].imgUrl
-            createImg(imgSrc, i+1)
+    if (itemsToBeLoaded > 0){
+        if (imgarrs.length > itemsToBeLoaded){
+            for(let i=imgarrs.length - itemsToBeLoaded ; i< itemsToBeLoaded; i++){
+                let imgSrc = imgarrs[i].imgUrl
+                createImg(imgSrc, i+1)
+            }
+            itemsToBeLoaded = 0
         }
-        // imgarrs.length = 0
-        itemsToBeLoaded = 0
     }
 }
 
@@ -275,8 +273,8 @@ document.addEventListener('DOMContentLoaded', function(){
             iframeW = l
             iframeH = t
             // handleResizeIframe(l, t)
+            waterfall(imgarrs)
         }
-        waterfall(imgarrs)
         return false
     }
     opDiv.onmouseup = document.onmouseup = function(ev){
