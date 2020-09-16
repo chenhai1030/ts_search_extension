@@ -7,6 +7,8 @@ let timeoutID = null;
 let bMove = false;
 let imgCheight: number
 let baseMouseX: number, baseMouseY: number
+let iframeW = 340
+let iframeH = 130
 
 function handleDragStart (evt: { clientX: number; clientY: number; }) {
     bMove = true
@@ -160,6 +162,7 @@ function prepareImg(num: number, resObj: { data: { imgUrl: string; }[]; }){
     let len = imgDiv.childNodes.length
     if (len){
         sendMsg("reinitIframe", imgDiv.clientHeight + 80 + 'px')
+        iframeH = imgDiv.clientHeight + 80 + 20
     }
 }
 
@@ -227,8 +230,6 @@ document.addEventListener('DOMContentLoaded', function(){
     let opDiv = document.getElementById('resizeOp') as HTMLDivElement
     let disX = 0
     let disY = 0
-    let iframeW = 0
-    let iframeH = 0
     let bDrag = false;
 
     opDiv.onmousedown = function(ev){
@@ -254,7 +255,6 @@ document.addEventListener('DOMContentLoaded', function(){
             imgDiv.style.minHeight = imgDiv.style.height 
             iframeW = l
             iframeH = t
-            // handleResizeIframe(l, t)
             waterfall(imgarrs)
         }
         return false
@@ -262,11 +262,7 @@ document.addEventListener('DOMContentLoaded', function(){
     opDiv.onmouseup = document.onmouseup =  function(ev){
         if(bDrag){
             bDrag = false;
-            if (iframeW > 0 && iframeH > 0){
-                handleResizeIframe(iframeW, iframeH)
-            }else{
-                handleResizeIframe(308, 60)
-            }
+            handleResizeIframe(iframeW, iframeH)
             document.onmousedown = document.onmousemove = null
         }
     }  
