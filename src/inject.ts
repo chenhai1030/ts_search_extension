@@ -251,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function(){
             resizeDiv.style.width = l + 'px'
             resizeDiv.style.height = t + 'px'
             imgDiv.style.height = t - 70 + 'px'
+            imgDiv.style.minHeight = imgDiv.style.height 
             iframeW = l
             iframeH = t
             // handleResizeIframe(l, t)
@@ -258,14 +259,16 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         return false
     }
-    opDiv.onmouseup = document.onmouseup = function(ev){
-        bDrag = false;
-        if (iframeW > 0 && iframeH > 0){
-            handleResizeIframe(iframeW, iframeH)
-        }else{
-            handleResizeIframe(308, 60)
+    opDiv.onmouseup = document.onmouseup =  function(ev){
+        if(bDrag){
+            bDrag = false;
+            if (iframeW > 0 && iframeH > 0){
+                handleResizeIframe(iframeW, iframeH)
+            }else{
+                handleResizeIframe(308, 60)
+            }
+            document.onmousedown = document.onmousemove = null
         }
-        document.onmousedown = document.onmousemove = null
     }  
 });
 
