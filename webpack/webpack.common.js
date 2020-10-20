@@ -8,7 +8,8 @@ module.exports = {
         background: path.join(__dirname, srcDir + 'background.ts'),
         content_script: path.join(__dirname, srcDir + 'content_script.ts'),
         inject_script: path.join(__dirname, srcDir + 'inject.ts'),
-        upload: path.join(__dirname, srcDir + 'upload.ts')
+        upload: path.join(__dirname, srcDir + 'upload.ts'),
+        upload_cover: path.join(__dirname, srcDir + 'upload_cover.ts'),
     },
     output: {
         path: path.join(__dirname, '../dist/js'),

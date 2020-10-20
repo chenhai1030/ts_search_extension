@@ -1,4 +1,4 @@
-export const serverip = "http://172.17.3.201/"
+export const serverip = "http://172.17.5.90/"
 
 export default function ajax(options: { type?: any; dataType?: any; data?: any; success?: any; fail?: any; url?: any; }) {
     options = options || {};

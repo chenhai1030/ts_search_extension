@@ -1,5 +1,5 @@
 
-'use strict';
+// 'use strict';
 function sendMessageToContentScript(message, callback)
 {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs)
@@ -8,6 +8,14 @@ function sendMessageToContentScript(message, callback)
 		{
 			if(callback) callback(response);
 		});
+	});
+}
+
+function getCurrentTabId(callback)
+{
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs)
+	{
+		if(callback) callback(tabs.length ? tabs[0].id: null);
 	});
 }
 
@@ -22,6 +30,51 @@ chrome.contextMenus.create({
         //     cmd:"upload",
         //     value:"nihao"
         // }, null)
+    }
+});
+chrome.contextMenus.create({
+    title: "更新封面",
+    contexts: ['video'],
+    onclick: function(){
+        chrome.tabs.executeScript({
+            file: 'js/upload_cover.js'
+        });
+        getCurrentTabId((tabId) => {
+            var port = chrome.tabs.connect(tabId, {name: 'upload-connect'});
+            // port.onMessage.addListener(function(msg){
+            //     console.info(msg)
+            //     if(msg.message == 'canvas-size'){
+
+            //     }
+            // })
+
+            chrome.tabs.captureVisibleTab(null,{},function(dataUrl){
+                var img = new Image();
+                let Width = this.parent.screen.width
+                let Height = this.parent.screen.height
+                console.info(Width, Height)
+                img.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = Width 
+                    canvas.height = Height;
+                    var context = canvas.getContext('2d');
+                    // Assuming px,py as starting coordinates and hx,hy be the width and the height of the image to be extracted
+                    context.drawImage(img, 0, 0, canvas.width, canvas.height, 0, 0, canvas.width , canvas.height);
+                    let croppedUri = canvas.toDataURL('image/jpeg');
+                    console.info(canvas.width, canvas.height)
+                    // You could deal with croppedUri as cropped image src.
+                    port.postMessage({message:croppedUri})
+                };
+                img.src = dataUrl
+                // port.onMessage.addListener(function(msg) {
+                //     // alert('收到消息：'+msg.answer);
+                //     if(msg.answer && msg.answer.startsWith('我是'))
+                //     {
+                //         port.postMessage({question: '哦，原来是你啊！'});
+                //     }
+                // });
+            });
+        });
     }
 });
 /* global chrome */
