@@ -1,0 +1,101 @@
+#regionSelectorContainer {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    cursor: crosshair;
+    overflow: hidden;
+}
+#regionSelectorContainer #outerFrame {
+    opacity: .6;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+}
+#mainController {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 100px;
+    background: rgba(128,46,179,.95);
+    border-radius: 8px;
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,.5);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+#closeButtonContainer {
+    float: right;
+    margin-left: -30px;
+    left: 100%;
+}
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+.closeButtonIcon {
+    height: 10px;
+    width: 10px;
+    padding: 7px;
+}
+#mainController .panelContent {
+    padding: 24px 24px 18px;
+    text-align: center;
+    width: 274px;
+}
+.panelContent {
+    direction: ltr;
+}
+.height-animator {
+    position: relative;
+    overflow: hidden;
+}
+.panel-animator {
+    position: relative;
+}
+.regionClipPadding {
+    padding-bottom: 6px;
+}
+.messageLabelContainer {
+    padding-bottom: 20px;
+}
+.wideButtonContainer {
+    background: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.wideButtonFont {
+    font-family: Segoe UI,Segoe,Segoe WP,Helvetica Neue,Roboto,Helvetica,Arial,Tahoma,Verdana,"sans-serif";
+    font-weight: 400;
+    font-size: 11pt;
+    color: #7e2ea6;
+}
+.wideActionButton {
+    display: inline-block;
+    line-height: 30px;
+    vertical-align: middle;
+    width: 100%;
+}
+.informationLabelFont {
+    font-weight: 400;
+    font-size: 24px;
+    color: #fff;
+}
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 0;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
