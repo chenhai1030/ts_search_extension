@@ -60,9 +60,6 @@ chrome.contextMenus.create({
 
                     chrome.tabs.captureVisibleTab(null,{},function(dataUrl){
                         var img = new Image();
-                        // clipScreenshots();
-                        // let Width = this.screen.width
-                        // let Height = this.screen.height
                         img.onload = function() {
                             var canvas = document.createElement('canvas');
                             canvas.width = 960

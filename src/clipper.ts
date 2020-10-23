@@ -13,18 +13,32 @@ var canvasExt = {
      * @param canvasId canvasId
      * @param penColor 画笔颜色
      */
-    drawRect: function (canvasId, penColor) {
+    drawRect: function (canvasId: string, penColor: any) {
         var that = this;
         var devicePixelRatio = window.devicePixelRatio;
         that.penColor = penColor;
 
         var canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         var ctx = canvas.getContext("2d")
+        ctx.canvas.width = window.innerWidth;
+		ctx.canvas.height = window.innerHeight;
         var canvasRect = canvas.getBoundingClientRect();
         //canvas 矩形框的左上角坐标
         var canvasLeft = canvasRect.left;
         var canvasTop = canvasRect.top;
 
+        // function Point(x, y) {
+        //     this.x = x
+        //     this.y = y
+        // }
+        // // 坐标转化为canvas坐标
+        // function windowToCanvas(x, y, type) {
+        //     //返回元素的大小以及位置
+        //     var bbox = canvas.getBoundingClientRect();
+        //     // bbox 的宽度会加上 canvas 的 border 会影响精度
+        //     return new Point(x - bbox.left * (canvas.width / bbox.width),
+        //         y - bbox.top * (canvas.height / bbox.height))
+        // }
 
         // key event - use DOM element as object
         canvas.addEventListener('keyup', doKeyUp, true);
@@ -41,19 +55,16 @@ var canvasExt = {
             //设置画笔颜色和宽度
             var color = that.penColor;
             // 确定起点
-            x = (e.pageX*devicePixelRatio - canvasLeft)
-            y = (e.pageY*devicePixelRatio - canvasTop)
-            console.info(window.innerWidth, window.innerHeight)
-            console.info(devicePixelRatio)
-            console.info(x, y)
+            x = e.clientX*devicePixelRatio - canvasLeft
+            y = e.clientY*devicePixelRatio - canvasTop
             ctx.strokeStyle = color;
             ctx.strokeRect(x,y,0,0);
             ctx.restore();
             
             canvas.onmousemove = function(e){
                 // 要画的矩形的宽高
-                var width = e.pageX*devicePixelRatio - x
-                var height = e.pageY*devicePixelRatio - y
+                var width = e.clientX*devicePixelRatio - x - canvasLeft
+                var height = e.clientY*devicePixelRatio - y -canvasTop
                 // 清除之前画的
                 ctx.clearRect(0, 0, panelW, panelH);
 
@@ -69,8 +80,8 @@ var canvasExt = {
                 var color = that.penColor;
     
                 canvas.onmousemove = null;
-                width = (e.pageX)*devicePixelRatio - x;
-                height = (e.pageY)*devicePixelRatio - y;
+                width = e.clientX*devicePixelRatio - x - canvasLeft
+                height = e.clientY*devicePixelRatio - y - canvasTop
 
                 console.info(width, height)
                 ctx.clearRect(0, 0, panelW, panelH); 
