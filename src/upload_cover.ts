@@ -16,6 +16,10 @@ import ajax from './util';
         "width: 100%; height: 100%;"
         clipIframe.style.cssText = cssText
         document.documentElement.appendChild(clipIframe)
+    }else{
+        clipIframe.style.display="block"
+        clipIframe.contentWindow.postMessage({cmd:"clipInit"}, '*')
+        return
     }
 
     let iframes = document.getElementsByTagName("iframe")
@@ -46,8 +50,9 @@ import ajax from './util';
         const data = e.data
         switch(data.cmd){
             case 'CLIP':
-                if(clipIframe)
-                    document.documentElement.removeChild(clipIframe)
+                clipIframe.style.display="none"
+                // if(clipIframe)
+                //     document.documentElement.removeChild(clipIframe)
                 canvasRect.x = data.x;
                 canvasRect.y = data.y;
                 canvasRect.width = data.width;
@@ -57,8 +62,9 @@ import ajax from './util';
                 });
                 break
             case 'empty':
-                if(clipIframe)
-                    document.documentElement.removeChild(clipIframe)
+                clipIframe.style.display="none"
+                // if(clipIframe)
+                //     document.documentElement.removeChild(clipIframe)
                 break
         }
     }, false);

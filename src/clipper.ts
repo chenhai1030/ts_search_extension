@@ -127,6 +127,7 @@ function doKeyUp(e){
             canvas.getContext("2d").clearRect(0, 0, panelW, panelH)
         }
         if(e.keyCode == 13){
+            canvas.getContext("2d").clearRect(0, 0, panelW, panelH)
             window.parent.postMessage({
                 cmd: 'CLIP',
                 x: x,
@@ -139,5 +140,14 @@ function doKeyUp(e){
 }
 
 document.addEventListener('DOMContentLoaded', function(){
+    window.addEventListener("message", function(e){
+        const data = e.data
+        switch(data.cmd){
+            case "clipInit":
+                var canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
+                canvas.focus()
+                break
+        }
+    })
     clipScreenshots("outerFrame");
 });
