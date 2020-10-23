@@ -129,9 +129,12 @@ function isCanvasBlank(canvas){
 function doKeyDown(e){
     console.info(e.keyCode)
     var canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
-    // document.getElementById('regionSelectorContainer').addEventListener("keydown", function(e){
     if(isCanvasBlank(canvas)){
         console.info("empty!")
+        window.parent.postMessage({
+            cmd: 'empty'
+        }, '*')
+        
     }else{
         console.info("not empty!")
         if(e.keyCode == 27){
@@ -151,59 +154,4 @@ function doKeyDown(e){
 
 document.addEventListener('DOMContentLoaded', function(){
     clipScreenshots("outerFrame");
-
-    // let c = document.getElementById("outerFrame") as HTMLCanvasElement
-    // const ctx = c.getContext("2d")
-
-    // let mousedown=function(e: { pageX: number; pageY: number; }){
-    //     x = startx = (e.pageX-c.offsetLeft+c.parentElement.scrollLeft)/scale;
-    //     y = starty = (e.pageY-c.offsetTop+c.parentElement.scrollTop)/scale;
-    //     console.info(startx, starty)
-    //     // if(currentR){
-    //     //     leftDistance=startx-currentR.x1;
-    //     //     topDistance=starty-currentR.y1;
-    //     // }
-    //     leftDistance = startx
-    //     topDistance = starty
-    //     ctx.strokeRect(x,y,0,0);
-    //     ctx.strokeStyle="#0000ff";
-    //     flag=1;
-    // }
-    // let mousemove=function(e){
-    //     x=(e.pageX-c.offsetLeft+c.parentElement.scrollLeft)/scale;
-    //     y=(e.pageY-c.offsetTop+c.parentElement.scrollTop)/scale;
-    //     ctx.save();
-    //     ctx.setLineDash([5])
-    //     c.style.cursor="crosshair";
-    //     ctx.clearRect(0,0,1920,1280)
-    //     if(flag==1){
-    //         ctx.strokeRect(startx,starty,x-startx,y-starty);
-    //     }
-    //     ctx.restore();
-    //     reshow(ctx);
-    // }
-    // let mouseup=function(e){
-    //     if(flag==1){
-    //         layers.push(fixPosition({
-    //             x1:startx,
-    //             y1:starty,
-    //             x2:x,
-    //             y2:y,
-    //             strokeStyle:'#0000ff',
-    //         }))
-    //     }
-    //     currentR=null;
-    //     flag=0;
-    //     reshow(ctx);
-    // }
-    // c.onmouseleave=function(){
-    //     c.onmousedown=null;
-    //     c.onmousemove=null;
-    //     c.onmouseup=null;
-    // };
-    // c.onmouseenter=function(){
-    //     c.onmousedown=mousedown;
-    //     c.onmousemove=mousemove;
-    //     document.onmouseup=mouseup;
-    // };
 });

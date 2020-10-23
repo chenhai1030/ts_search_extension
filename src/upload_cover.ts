@@ -46,7 +46,8 @@ import ajax from './util';
         const data = e.data
         switch(data.cmd){
             case 'CLIP':
-                console.info(data)
+                if(clipIframe)
+                    document.documentElement.removeChild(clipIframe)
                 canvasRect.x = data.x;
                 canvasRect.y = data.y;
                 canvasRect.width = data.width;
@@ -54,6 +55,10 @@ import ajax from './util';
                 chrome.runtime.sendMessage({msg:canvasRect}, function(res){
 
                 });
+                break
+            case 'empty':
+                if(clipIframe)
+                    document.documentElement.removeChild(clipIframe)
                 break
         }
     }, false);
