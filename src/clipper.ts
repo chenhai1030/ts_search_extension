@@ -3,32 +3,6 @@ let panelH = 1280
 // let mousedown = null
 let x,y,width, height
 
-// function Point(x, y) {
-//     this.x = x
-//     this.y = y
-// }
-// // 坐标转化为canvas坐标
-// function windowToCanvas(x, y, canvas) {
-//     //返回元素的大小以及位置
-//     var bbox = canvas.getBoundingClientRect();
-//     // bbox 的宽度会加上 canvas 的 border 会影响精度
-//     return new Point(x - bbox.left * (canvas.width / bbox.width),
-//         y - bbox.top * (canvas.height / bbox.height))
-// }
-// function updateRect(context, point) {
-//     let w = Math.abs(point.x - mousedown.x)
-//     let h = Math.abs(point.y - mousedown.y)
-
-//     let left = point.x > mousedown.x ? mousedown.x : point.x
-//     let top = point.y > mousedown.y ? mousedown.y : point.y
-
-//     context.save();
-//     context.beginPath();
-//     context.rect(left, top, w, h);
-//     context.stroke();
-//     context.restore();
-// }
-
 /**
  * 选取划线的canvasExt
  * @type {{drawRect: canvasExt.drawRect}}
@@ -53,7 +27,7 @@ var canvasExt = {
 
 
         // key event - use DOM element as object
-        canvas.addEventListener('keydown', doKeyDown, true);
+        canvas.addEventListener('keyup', doKeyUp, true);
         canvas.tabIndex = 1000
         canvas.focus();  
         // // key event - use window as object
@@ -69,10 +43,11 @@ var canvasExt = {
             // 确定起点
             x = (e.pageX*devicePixelRatio - canvasLeft)
             y = (e.pageY*devicePixelRatio - canvasTop)
+            console.info(window.innerWidth, window.innerHeight)
             console.info(devicePixelRatio)
             console.info(x, y)
-            ctx.strokeRect(x,y,0,0);
             ctx.strokeStyle = color;
+            ctx.strokeRect(x,y,0,0);
             ctx.restore();
             
             canvas.onmousemove = function(e){
@@ -126,7 +101,7 @@ function isCanvasBlank(canvas){
     return !pixelBuffer.some(color => color !== 0);
 }
 
-function doKeyDown(e){
+function doKeyUp(e){
     console.info(e.keyCode)
     var canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
     if(isCanvasBlank(canvas)){

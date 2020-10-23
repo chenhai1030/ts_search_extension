@@ -57,7 +57,7 @@ chrome.contextMenus.create({
                 function(request, sender, sendResponse){
                     console.info(request)
                     let rect = request.msg
-                    var port = chrome.tabs.connect(tabId, {name: 'upload-connect'});
+
                     chrome.tabs.captureVisibleTab(null,{},function(dataUrl){
                         var img = new Image();
                         // clipScreenshots();
@@ -72,8 +72,9 @@ chrome.contextMenus.create({
                             context.drawImage(img, rect.x, rect.y, rect.width, rect.height, 0, 0, canvas.width , canvas.height);
                             let croppedUri = canvas.toDataURL('image/jpeg');
                             // You could deal with croppedUri as cropped image src.
-                            port.postMessage({message:croppedUri})
-                            port.disconnect()
+                            // port.postMessage({message:croppedUri})
+                            // port.disconnect()
+                            sendMessageToContentScript({cmd:"upload-connect", message:croppedUri}, null)
                         };
                         img.src = dataUrl
                     });

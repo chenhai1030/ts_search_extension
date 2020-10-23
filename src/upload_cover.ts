@@ -63,85 +63,85 @@ import ajax from './util';
         }
     }, false);
 
-  
-    chrome.runtime.onConnect.addListener(function(port) {
-        if(port.name == 'upload-connect') {
-            port.onMessage.addListener(function(msg) {
-                console.log('收到长连接消息：', msg);
-                var base64 = msg.message
-                let params = {
-                    filetype: "jpeg",
-                    image: base64.substring(base64.lastIndexOf(",")+1)
-                }
-                ajax({
-                    type: "POST",
-                    url:"/ajaxa/post/upload_pic",
-                    data:params,
-                    success: function(data: string) {
-                        console.info(data)
-                        var obj = null;
-                        try{
-                            obj = JSON.parse( data );
-                        }catch(e){};  
-                        let params = {
-                            id: id,
-                            still: obj.data.url,
-                        }
-                        ajax({
-                            type: "POST",
-                            url: "/ajaxa/post/save_still",
-                            data: params,
-
-                            success: function(data) {
-                            }
-                        });
-                        mImg.src = obj.data.url 
+    let base64_old: any
+    chrome.runtime.onMessage.addListener(function(request, sender, response){
+        if(request.cmd == 'upload-connect') {
+            let base64 = request.message
+            if (base64 == base64_old){
+                console.info("same")
+                return
+            }else{
+                base64_old = base64
+            }
+            let params = {
+                filetype: "jpeg",
+                image: base64.substring(base64.lastIndexOf(",")+1)
+            }
+            ajax({
+                type: "POST",
+                url:"/ajaxa/post/upload_pic",
+                data:params,
+                success: function(data: string) {
+                    base64_old = null
+                    console.info(data)
+                    var obj = null;
+                    try{
+                        obj = JSON.parse( data );
+                    }catch(e){};  
+                    let params = {
+                        id: id,
+                        still: obj.data.url,
                     }
-                });
+                    ajax({
+                        type: "POST",
+                        url: "/ajaxa/post/save_still",
+                        data: params,
+
+                        success: function(data) {
+                        }
+                    });
+                    mImg.src = obj.data.url 
+                }
             });
         }
-    });
-    // html2canvas(_video, {
-    //     useCORS : true,
-    //     allowTaint : true,
-    //     width: _video.width,
-    //     height:_video.height
-    // }).then(canvas => {
-    //     let base64 = canvas.toDataURL("image/png"); 
-    //     let params = {
-    //         filetype: "png",
-    //         image: base64.substring(base64.lastIndexOf(",")+1),
-    //     }
-    //     ajax({
-    //         type: "POST",
-    //         url:"/ajaxa/post/upload_pic",
-    //         data:params,
-    //         // error: function(request) {
-    //         //     alert("上传失败");
-    //         // },
-    //         success: function(data: string) {
-    //             console.info(data)
-    //             var obj = null;
-    //             try{
-    //                 obj = JSON.parse( data );
-    //             }catch(e){};  
+    })
+  
+    // chrome.runtime.onConnect.addListener(function(port) {
+    //     if(port.name == 'upload-connect') {
+    //         port.onMessage.addListener(function(msg) {
+    //             console.log('收到长连接消息：', msg);
+    //             var base64 = msg.message
     //             let params = {
-    //                 id: id,
-    //                 still: obj.data.url,
+    //                 filetype: "jpeg",
+    //                 image: base64.substring(base64.lastIndexOf(",")+1)
     //             }
     //             ajax({
     //                 type: "POST",
-    //                 url: "/ajaxa/post/save_still",
-    //                 data: params,
-    //                 // error: function(request) {
-    //                 //     alert("上传失败");
-    //                 // },
-    //                 success: function(data) {
+    //                 url:"/ajaxa/post/upload_pic",
+    //                 data:params,
+    //                 success: function(data: string) {
+    //                     console.info(data)
+    //                     var obj = null;
+    //                     try{
+    //                         obj = JSON.parse( data );
+    //                     }catch(e){};  
+    //                     let params = {
+    //                         id: id,
+    //                         still: obj.data.url,
+    //                     }
+    //                     ajax({
+    //                         type: "POST",
+    //                         url: "/ajaxa/post/save_still",
+    //                         data: params,
+
+    //                         success: function(data) {
+    //                         }
+    //                     });
+    //                     mImg.src = obj.data.url 
     //                 }
     //             });
-    //             mImg.src = obj.data.url 
-    //         }
-    //     });
+    //         });
+    //     }
     // });
 
 }();
