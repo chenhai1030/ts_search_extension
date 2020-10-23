@@ -17,7 +17,7 @@ import ajax from './util';
         clipIframe.style.cssText = cssText
         document.documentElement.appendChild(clipIframe)
     }else{
-        clipIframe.style.display="block"
+        clipIframe.style.zIndex="2147483647"
         clipIframe.contentWindow.postMessage({cmd:"clipInit"}, '*')
         return
     }
@@ -50,7 +50,7 @@ import ajax from './util';
         const data = e.data
         switch(data.cmd){
             case 'CLIP':
-                clipIframe.style.display="none"
+                clipIframe.style.zIndex="-1"
                 // if(clipIframe)
                 //     document.documentElement.removeChild(clipIframe)
                 canvasRect.x = data.x;
@@ -62,7 +62,7 @@ import ajax from './util';
                 });
                 break
             case 'empty':
-                clipIframe.style.display="none"
+                clipIframe.style.zIndex="-1"
                 // if(clipIframe)
                 //     document.documentElement.removeChild(clipIframe)
                 break
