@@ -51,21 +51,33 @@ var canvasExt = {
         // 要画的矩形的起点 xy
         x = 0;
         y = 0;
+        let startX = 0;
+        let startY = 0;
         canvas.onmousedown = function(e) {
             e.preventDefault()
             //设置画笔颜色和宽度
             var color = that.penColor;
             // 确定起点
+            // 鼠标起点，兼容diff window.devicePixelRatio
+            startX = e.clientX - canvasLeft
+            startY = e.clientY 
             x = e.clientX*devicePixelRatio - canvasLeft
             y = e.clientY*devicePixelRatio - canvasTop
+            //画框移动矩形
+            let W = 0;
+            let H = 0;
+
             ctx.strokeStyle = color;
-            ctx.strokeRect(x,y,0,0);
+            ctx.strokeRect(startX,startY,0,0);
             ctx.restore();
             
             canvas.onmousemove = function(e){
                 // 要画的矩形的宽高
-                var width = e.clientX*devicePixelRatio - x - canvasLeft
-                var height = e.clientY*devicePixelRatio - y -canvasTop
+                W = e.clientX - startX - canvasLeft
+                H = e.clientY- startY -canvasTop
+                //实际截图区域
+                // width = e.clientX*devicePixelRatio - x - canvasLeft
+                // height = e.clientY*devicePixelRatio - y -canvasTop
                 // 清除之前画的
                 ctx.clearRect(0, 0, panelW, panelH);
 
@@ -74,13 +86,16 @@ var canvasExt = {
                 
                 ctx.strokeStyle = color;
                 ctx.beginPath()
-                ctx.strokeRect(x, y, width, height)
+                ctx.strokeRect(startX, startY, W, H)
                 ctx.restore();
             }
             canvas.onmouseup=function(e){
                 var color = that.penColor;
     
                 canvas.onmousemove = null;
+                W = e.clientX - startX - canvasLeft
+                H = e.clientY- startY -canvasTop
+                
                 width = e.clientX*devicePixelRatio - x - canvasLeft
                 height = e.clientY*devicePixelRatio - y - canvasTop
 
@@ -88,7 +103,7 @@ var canvasExt = {
                 ctx.clearRect(0, 0, panelW, panelH); 
                 ctx.strokeStyle = color;
                 ctx.beginPath()
-                ctx.strokeRect(x, y, width, height)
+                ctx.strokeRect(startX, startY, W, H)
                 ctx.restore();
             }
         }

@@ -99,7 +99,7 @@ import ajax from './util';
                         url: "/ajaxa/post/save_still",
                         data: params,
 
-                        success: function(data) {
+                        success: function() {
                             chrome.runtime.onMessage.removeListener(handleUploadCover)
                         }
                     });
