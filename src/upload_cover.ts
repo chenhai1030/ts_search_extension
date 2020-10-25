@@ -16,10 +16,6 @@ import ajax from './util';
         "width: 100%; height: 100%;"
         clipIframe.style.cssText = cssText
         document.documentElement.appendChild(clipIframe)
-    }else{
-        clipIframe.style.zIndex="2147483647"
-        clipIframe.contentWindow.postMessage({cmd:"clipInit"}, '*')
-        return
     }
 
     let iframes = document.getElementsByTagName("iframe")
@@ -44,33 +40,33 @@ import ajax from './util';
         x:Number,
         y:Number,
         width:Number,
-        height:Number
+        height:Number,
     }
     window.addEventListener("message", function(e){
         const data = e.data
         switch(data.cmd){
             case 'CLIP':
-                clipIframe.style.zIndex="-1"
-                // if(clipIframe)
-                //     document.documentElement.removeChild(clipIframe)
                 canvasRect.x = data.x;
                 canvasRect.y = data.y;
                 canvasRect.width = data.width;
                 canvasRect.height = data.height;
                 chrome.runtime.sendMessage({msg:canvasRect}, function(res){
-
+                    document.documentElement.removeChild(clipIframe)
+                    return
                 });
                 break
             case 'empty':
-                clipIframe.style.zIndex="-1"
-                // if(clipIframe)
-                //     document.documentElement.removeChild(clipIframe)
+                // clipIframe.style.zIndex="-1"
+                if(clipIframe){
+                    document.documentElement.removeChild(clipIframe)
+                    return
+                }
                 break
         }
     }, false);
 
     let base64_old: any
-    chrome.runtime.onMessage.addListener(function(request, sender, response){
+    function handleUploadCover(request, sender, response){
         if(request.cmd == 'upload-connect') {
             let base64 = request.message
             if (base64 == base64_old){
@@ -89,7 +85,6 @@ import ajax from './util';
                 data:params,
                 success: function(data: string) {
                     base64_old = null
-                    console.info(data)
                     var obj = null;
                     try{
                         obj = JSON.parse( data );
@@ -98,19 +93,24 @@ import ajax from './util';
                         id: id,
                         still: obj.data.url,
                     }
+                    console.info(params)
                     ajax({
                         type: "POST",
                         url: "/ajaxa/post/save_still",
                         data: params,
 
                         success: function(data) {
+                            chrome.runtime.onMessage.removeListener(handleUploadCover)
                         }
                     });
                     mImg.src = obj.data.url 
                 }
             });
-        }
-    })
+        } 
+    }
+
+    chrome.runtime.onMessage.addListener(handleUploadCover)
+
   
     // chrome.runtime.onConnect.addListener(function(port) {
     //     if(port.name == 'upload-connect') {

@@ -3,6 +3,7 @@ let panelH = 1280
 // let mousedown = null
 let x,y,width, height
 
+
 /**
  * 选取划线的canvasExt
  * @type {{drawRect: canvasExt.drawRect}}
@@ -113,7 +114,6 @@ function isCanvasBlank(canvas){
 }
 
 function doKeyUp(e){
-    console.info(e.keyCode)
     var canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
     if(isCanvasBlank(canvas)){
         console.info("empty!")
@@ -140,14 +140,5 @@ function doKeyUp(e){
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-    window.addEventListener("message", function(e){
-        const data = e.data
-        switch(data.cmd){
-            case "clipInit":
-                var canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
-                canvas.focus()
-                break
-        }
-    })
     clipScreenshots("outerFrame");
 });
