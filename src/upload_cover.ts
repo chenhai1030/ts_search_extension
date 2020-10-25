@@ -47,10 +47,9 @@ import ajax from './util';
                 canvasRect.y = data.y;
                 canvasRect.width = data.width;
                 canvasRect.height = data.height;
+                if(clipIframe)
+                    document.documentElement.removeChild(clipIframe)
                 chrome.runtime.sendMessage({msg:canvasRect}, function(res){
-                    if(clipIframe)
-                        document.documentElement.removeChild(clipIframe)
-                    return
                 });
                 break
             case 'empty':

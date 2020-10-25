@@ -59,7 +59,7 @@ chrome.contextMenus.create({
                         img.src = dataUrl
                     });
                     chrome.runtime.onMessage.removeListener(doClip)
-                    sendResponse("remove clip iframe")
+                    // sendResponse("remove clip iframe")
                 }
             );
             // var port = chrome.tabs.connect(tabId, {name: 'upload-connect'});
