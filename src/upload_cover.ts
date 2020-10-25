@@ -23,9 +23,6 @@ import ajax from './util';
         if (iframes[i].dataset.src == "/admin/refine_task"){
             var contentIframe = document.getElementsByTagName("iframe")[i] 
         }
-        if(iframes[i].id == "FuntvGalleryCliper"){
-            var opIframe = document.getElementsByTagName("iframe")[i] 
-        }
     }
 
 
@@ -51,12 +48,12 @@ import ajax from './util';
                 canvasRect.width = data.width;
                 canvasRect.height = data.height;
                 chrome.runtime.sendMessage({msg:canvasRect}, function(res){
-                    document.documentElement.removeChild(clipIframe)
+                    if(clipIframe)
+                        document.documentElement.removeChild(clipIframe)
                     return
                 });
                 break
             case 'empty':
-                // clipIframe.style.zIndex="-1"
                 if(clipIframe){
                     document.documentElement.removeChild(clipIframe)
                     return
@@ -65,16 +62,9 @@ import ajax from './util';
         }
     }, false);
 
-    let base64_old: any
     function handleUploadCover(request, sender, response){
         if(request.cmd == 'upload-connect') {
             let base64 = request.message
-            if (base64 == base64_old){
-                console.info("same")
-                return
-            }else{
-                base64_old = base64
-            }
             let params = {
                 filetype: "jpeg",
                 image: base64.substring(base64.lastIndexOf(",")+1)
@@ -84,7 +74,6 @@ import ajax from './util';
                 url:"/ajaxa/post/upload_pic",
                 data:params,
                 success: function(data: string) {
-                    base64_old = null
                     var obj = null;
                     try{
                         obj = JSON.parse( data );
