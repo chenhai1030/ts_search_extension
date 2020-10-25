@@ -59,10 +59,10 @@ var canvasExt = {
             var color = that.penColor;
             // 确定起点
             // 鼠标起点，兼容diff window.devicePixelRatio
-            startX = e.clientX - canvasLeft
-            startY = e.clientY 
-            x = e.clientX*devicePixelRatio - canvasLeft
-            y = e.clientY*devicePixelRatio - canvasTop
+            startX = e.clientX  
+            startY = e.clientY  
+            x = e.clientX*devicePixelRatio - 1
+            y = e.clientY*devicePixelRatio - 1
             //画框移动矩形
             let W = 0;
             let H = 0;
