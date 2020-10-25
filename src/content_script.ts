@@ -162,7 +162,7 @@ function exchange(data: string){
     let mImg = exDiv[0].childNodes[2] as HTMLImageElement
     let id = exDiv[0].attributes[6].nodeValue
 
-    if (data.includes("http://")){
+    if (data.includes("img.funshion.com")){
         save_still(id, data)
         mImg.src = data
     }else{
