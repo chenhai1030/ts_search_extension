@@ -1,7 +1,7 @@
 let panelW = 1920
 let panelH = 1280
 // let mousedown = null
-let x,y,width, height
+let x: number,y: number,width: number, height: number
 
 
 /**

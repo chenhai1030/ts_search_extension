@@ -22,6 +22,7 @@
     "<all_urls>"
   ],
   "web_accessible_resources":[
+    "js/upload_cover_inject.js",
     "clipper.html",
     "helper.html"
   ],

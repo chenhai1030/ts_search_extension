@@ -50,7 +50,7 @@ chrome.contextMenus.create({
                             var context = canvas.getContext('2d');
                             // Assuming px,py as starting coordinates and hx,hy be the width and the height of the image to be extracted
                             context.drawImage(img, rect.x, rect.y, rect.width, rect.height, 0, 0, canvas.width , canvas.height);
-                            let croppedUri = canvas.toDataURL('image/jpeg');
+                            let croppedUri = canvas.toDataURL('image/png');
                             // You could deal with croppedUri as cropped image src.
                             // port.postMessage({message:croppedUri})
                             // port.disconnect()
@@ -88,13 +88,13 @@ chrome.browserAction.onClicked.addListener(function () {
 });
 
 // chrome.webRequest.onBeforeRequest.addListener(function (details) {
-//         return {redirectUrl: chrome.extension.getURL("js/jquery-2.2.1.js")}
-//         // return {redirectUrl: chrome.extension.getURL("js/refine_task.html")}
+//         // return {redirectUrl: chrome.extension.getURL("js/jquery-2.2.1.js")}
+//         return {redirectUrl: chrome.extension.getURL("js/refine_task.html")}
 //     },
 //     {
-//         urls:["http://fcg.fun.tv/static/admin/common/static/js/jquery.min_6f28219.js"],
-//         // urls:["http://fcg.fun.tv/admin/refine_task"],
-//         types: ["script"]
+//         // urls:["http://fcg.fun.tv/static/admin/common/static/js/jquery.min_6f28219.js"],
+//         urls:["http://fcg.fun.tv/admin/refine_task"],
+//         types: ["sub_frame"]
 //     },
 //     ["blocking"]
 // );

@@ -1,7 +1,44 @@
-import { contains } from 'jquery';
 import ajax from './util';
 
 
+// function retrieveWindowVariables(variables: string | any[]) {
+//     var ret = {};
+
+//     var scriptContent = "";
+//     for (var i = 0; i < variables.length; i++) {
+//         var currVariable = variables[i];
+//         scriptContent += "if (typeof " + currVariable + " !== 'undefined') document.body.getAttribute('tmp_" + currVariable + "', JSON.stringify(" + currVariable + "));\n"
+//     }
+
+//     var script = document.createElement('script');
+//     script.id = 'tmpScript';
+//     script.appendChild(document.createTextNode(scriptContent));
+//     (document.body || document.head || document.documentElement).appendChild(script);
+
+//     for (var i = 0; i < variables.length; i++) {
+//         var currVariable = variables[i];
+//         ret[currVariable] = JSON.parse(document.body.getAttribute("tmp_" + currVariable));
+//         document.body.removeAttribute("tmp_" + currVariable);
+//     }
+
+//     console.info(ret)
+//     document.documentElement.removeChild(document.getElementById("tmpScript")) 
+//     return ret;
+// }
+function injectCustomJs(jsPath)
+{
+	jsPath = jsPath || 'js/upload_cover_inject.js';
+	var temp = document.createElement('script');
+	temp.setAttribute('type', 'text/javascript');
+	// 获得的地址类似：chrome-extension://ihcokhadfjfchaeagdoclpnjdiokfakg/js/upload_cover_inject.js
+	temp.src = chrome.extension.getURL(jsPath);
+	temp.onload = function()
+	{
+        // console.info("remove inject")
+		document.head.removeChild(temp);
+    };
+	document.head.appendChild(temp);
+}
 
 +function(){
     let clipIframe = document.getElementById("FuntvGalleryCliper") as HTMLIFrameElement
@@ -25,21 +62,21 @@ import ajax from './util';
         }
     }
 
-
     let exDiv = contentIframe.contentWindow.document.getElementsByClassName("img-still mod-editpic")
     let mImg = exDiv[0].childNodes[2] as HTMLImageElement
     let id = exDiv[0].attributes[6].nodeValue
     let shotDiv = contentIframe.contentWindow.document.getElementsByClassName("videobox")
     let _video = shotDiv[0].childNodes[3] as HTMLVideoElement
+    injectCustomJs(null)
     _video.pause();
-    // let rectObject = _video.getBoundingClientRect();
+    
     var canvasRect = {
         x:Number,
         y:Number,
         width:Number,
         height:Number,
     }
-    window.addEventListener("message", function(e){
+    window.addEventListener("message", function handleKey(e){
         const data = e.data
         switch(data.cmd){
             case 'CLIP':
@@ -47,10 +84,10 @@ import ajax from './util';
                 canvasRect.y = data.y;
                 canvasRect.width = data.width;
                 canvasRect.height = data.height;
-                if(clipIframe)
+                if(clipIframe){
                     document.documentElement.removeChild(clipIframe)
-                chrome.runtime.sendMessage({msg:canvasRect}, function(res){
-                });
+                }
+                chrome.runtime.sendMessage({msg:canvasRect}, function(res){});
                 break
             case 'empty':
                 if(clipIframe){
@@ -59,6 +96,7 @@ import ajax from './util';
                 }
                 break
         }
+        window.removeEventListener("message", handleKey)
     }, false);
 
     function handleUploadCover(request, sender, response){
@@ -81,6 +119,11 @@ import ajax from './util';
                         id: id,
                         still: obj.data.url,
                     }
+
+                    contentIframe.contentWindow.postMessage({
+                        cmd: 'VIDEOCHANGE',
+                        data: params
+                    }, '*') 
                     console.info(params)
                     ajax({
                         type: "POST",

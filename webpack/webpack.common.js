@@ -11,6 +11,7 @@ module.exports = {
         clipper: path.join(__dirname, srcDir + 'clipper.ts'),
         upload: path.join(__dirname, srcDir + 'upload.ts'),
         upload_cover: path.join(__dirname, srcDir + 'upload_cover.ts'),
+        upload_cover_inject: path.join(__dirname, srcDir + 'upload_cover_inject.ts'),
     },
     output: {
         path: path.join(__dirname, '../dist/js'),
