@@ -34,8 +34,12 @@ function injectCustomJs(jsPath)
 	temp.src = chrome.extension.getURL(jsPath);
 	temp.onload = function()
 	{
-        // console.info("remove inject")
-		document.head.removeChild(temp);
+        try{
+            document.head.removeChild(temp);
+        }
+        catch (e){
+            console.info(e)    
+        }
     };
 	document.head.appendChild(temp);
 }
@@ -51,6 +55,7 @@ function injectCustomJs(jsPath)
         "margin: 0px; max-height: none; max-width: none; min-height: 0px; min-width: 0px;" +
         "overflow: hidden; padding: 0px; position: fixed; transition: initial; z-index: 2147483647;" +
         "width: 100%; height: 100%;"
+        // background-color:#000;opacity:0.3;filter: alpha(opacity=30)"
         clipIframe.style.cssText = cssText
         document.documentElement.appendChild(clipIframe)
     }
@@ -85,7 +90,11 @@ function injectCustomJs(jsPath)
                 canvasRect.width = data.width;
                 canvasRect.height = data.height;
                 if(clipIframe){
-                    document.documentElement.removeChild(clipIframe)
+                    try{
+                        document.documentElement.removeChild(clipIframe)
+                    }catch(e){
+                        console.info(e)
+                    }
                 }
                 chrome.runtime.sendMessage({msg:canvasRect}, function(res){});
                 break
@@ -100,6 +109,7 @@ function injectCustomJs(jsPath)
     }, false);
 
     function handleUploadCover(request, sender, response){
+        chrome.runtime.onMessage.removeListener(handleUploadCover)
         if(request.cmd == 'upload-connect') {
             let base64 = request.message
             let params = {
@@ -131,7 +141,6 @@ function injectCustomJs(jsPath)
                         data: params,
 
                         success: function() {
-                            chrome.runtime.onMessage.removeListener(handleUploadCover)
                         }
                     });
                     mImg.src = obj.data.url 
