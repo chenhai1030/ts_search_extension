@@ -96,11 +96,13 @@ function injectCustomJs(jsPath)
                         console.info(e)
                     }
                 }
-                chrome.runtime.sendMessage({msg:canvasRect}, function(res){});
+                chrome.runtime.sendMessage({msg:canvasRect}, null);
                 break
             case 'empty':
                 if(clipIframe){
-                    document.documentElement.removeChild(clipIframe)
+                    try{
+                        document.documentElement.removeChild(clipIframe)
+                    }catch(e){}
                     return
                 }
                 break
@@ -122,13 +124,14 @@ function injectCustomJs(jsPath)
                 data:params,
                 success: function(data: string) {
                     var obj = null;
+                    let params:any = null;
                     try{
                         obj = JSON.parse( data );
+                        params = {
+                            id: id,
+                            still: obj.data.url,
+                        }
                     }catch(e){};  
-                    let params = {
-                        id: id,
-                        still: obj.data.url,
-                    }
 
                     contentIframe.contentWindow.postMessage({
                         cmd: 'VIDEOCHANGE',

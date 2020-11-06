@@ -38,6 +38,8 @@ chrome.contextMenus.create({
         getCurrentTabId((tabId) => {
             chrome.runtime.onMessage.addListener(
                 function doClip(request, sender, sendResponse){
+                    chrome.runtime.onMessage.removeListener(doClip)
+                    sendResponse('');
                     console.info(request)
                     let rect = request.msg
 
@@ -58,7 +60,6 @@ chrome.contextMenus.create({
                         };
                         img.src = dataUrl
                     });
-                    chrome.runtime.onMessage.removeListener(doClip)
                     // sendResponse("remove clip iframe")
                 }
             );

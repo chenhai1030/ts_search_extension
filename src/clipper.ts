@@ -28,25 +28,11 @@ var canvasExt = {
         var canvasLeft = canvasRect.left;
         var canvasTop = canvasRect.top;
 
-        // function Point(x, y) {
-        //     this.x = x
-        //     this.y = y
-        // }
-        // // 坐标转化为canvas坐标
-        // function windowToCanvas(x, y, type) {
-        //     //返回元素的大小以及位置
-        //     var bbox = canvas.getBoundingClientRect();
-        //     // bbox 的宽度会加上 canvas 的 border 会影响精度
-        //     return new Point(x - bbox.left * (canvas.width / bbox.width),
-        //         y - bbox.top * (canvas.height / bbox.height))
-        // }
-
         // key event - use DOM element as object
         canvas.addEventListener('keyup', doKeyUp, true);
         canvas.tabIndex = 1000
         canvas.focus();  
-        // // key event - use window as object
-        // window.addEventListener('keydown', doKeyDown, true);
+        // key event - use window as object
 
         // 要画的矩形的起点 xy
         x = 0;
@@ -62,16 +48,16 @@ var canvasExt = {
             let ratio = 16 / 9
             // 确定起点
             // 鼠标起点，兼容diff window.devicePixelRatio
-            startX = e.clientX - canvasLeft
-            startY = e.clientY  
-            x = e.clientX*devicePixelRatio //- canvasLeft
+            startX = e.clientX 
+            startY = e.clientY + 7 
+            x = e.clientX*devicePixelRatio 
             y = e.clientY*devicePixelRatio 
             //画框移动矩形
             let W = 0;
             let H = 0;
 
             ctx.strokeStyle = color;
-            ctx.strokeRect(startX,startY,0,0);
+            ctx.strokeRect(startX ,startY ,0,0);
             ctx.restore();
             
             canvas.onmousemove = function(e){
@@ -80,16 +66,14 @@ var canvasExt = {
                     return false
                 }
                 // 要画的矩形的宽高
-                W = e.clientX - startX - canvasLeft 
-                H = e.clientY- startY- canvasTop 
-                if (W/H >= ratio){
-                    H = W/ratio
-                }else{
-                    W = H*ratio
-                }
-                //实际截图区域
-                // width = e.clientX*devicePixelRatio - x - canvasLeft
-                // height = e.clientY*devicePixelRatio - y -canvasTop
+                W = e.clientX - startX 
+                H = e.clientY- startY + 7
+                // if (W/H >= ratio){
+                //     H = W/ratio
+                // }else{
+                //     W = H*ratio
+                // }
+
                 // 清除之前画的
                 ctx.clearRect(0, 0, panelW, panelH);
 
@@ -102,6 +86,9 @@ var canvasExt = {
                 ctx.beginPath()
                 ctx.strokeRect(startX, startY, W, H)
                 ctx.restore();
+
+                width = e.clientX*devicePixelRatio - x  
+                height = e.clientY*devicePixelRatio - y 
             }
             canvas.onmouseup=function(e){
                 if(resizing){
@@ -111,25 +98,20 @@ var canvasExt = {
                 var color = that.penColor;
     
                 canvas.onmousemove = null;
-                W = e.clientX - startX - canvasLeft
-                H = e.clientY- startY - canvasTop
-                if (W/H >= ratio){
-                    H = W/ratio
-                }else{
-                    W = H*ratio
-                }
+                // if (W/H >= ratio){
+                //     H = W/ratio
+                // }else{
+                //     W = H*ratio
+                // }
                 
-                width = e.clientX*devicePixelRatio - x 
-                height = e.clientY*devicePixelRatio - y 
 
-                // console.info(width, height, W, H)
                 ctx.clearRect(0, 0, panelW, panelH); 
                 ctx.strokeStyle = color;
                 ctx.beginPath()
                 ctx.strokeRect(startX, startY, W, H)
                 ctx.restore();
 
-                cropBox.build(startX + canvasLeft, startY + canvasTop, W, H)
+                cropBox.build(startX, startY , W, H)
             }
         }
     }
@@ -155,6 +137,10 @@ function isCanvasBlank(canvas: HTMLCanvasElement){
 
 function doKeyUp(e: { keyCode: number; }){
     var canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
+    if (canvas.width == 0 || canvas.height == 0){
+        return false
+    }
+
     if(isCanvasBlank(canvas)){
         console.info("empty!")
         window.parent.postMessage({
@@ -165,10 +151,12 @@ function doKeyUp(e: { keyCode: number; }){
         console.info("not empty!")
         if(e.keyCode == 27){
             canvas.getContext("2d").clearRect(0, 0, panelW, panelH)
+            cropBox.unbuild()
         }
         if(e.keyCode == 13){
             canvas.getContext("2d").clearRect(0, 0, panelW, panelH)
-            console.info("cover:", x, y, width, height)
+            cropBox.unbuild()
+
             window.parent.postMessage({
                 cmd: 'CLIP',
                 x: x,
@@ -179,12 +167,12 @@ function doKeyUp(e: { keyCode: number; }){
             canvas.removeEventListener("keyup", doKeyUp)
         }
     }
+    return false
 }
 
 var cropBox = {
     build: function(x, y, w, h){
         let box = document.getElementById("cropper-crop-box")
-        // box.style.transform = 'translateX('+ x + 'px)' + 'translateY('+ y + 'px)'
         box.style.left = x + "px"
         box.style.top = y + "px"
         box.style.width = w + "px"
@@ -226,17 +214,20 @@ var cropBox = {
 
                 let iL = e.clientX - disX;
                 let iT = e.clientY - disY;
-                var maxW = document.documentElement.clientWidth - box.offsetLeft - 2;
-                var maxH = document.documentElement.clientHeight - box.offsetTop - 2;
                 let iH = isTop ? iParentHeight - iT : obj.offsetHeight + iT;
                 var iW = isLeft ? iParentWidth - iL : obj.offsetWidth + iL;
                 isLeft && (box.style.left = iParentLeft + iL + 'px');
                 isTop && (box.style.top = iParentTop + iT + 'px');
 
-                iW > maxW && (iW = maxW);
                 lockX || (box.style.width = iW + "px");
-                iH > maxH && (iH = maxH);
                 lockY || (box.style.height = iH + "px");
+
+                console.info("org:", x,y,width, height)
+                x = parseInt(box.style.left, 10)*devicePixelRatio
+                y = parseInt(box.style.top, 10)*devicePixelRatio - 8
+                width = parseInt(box.style.width, 10)*devicePixelRatio
+                height = parseInt(box.style.height, 10)*devicePixelRatio
+                console.info("move:", x,y,width, height)
             }
             document.onmouseup = function(e){
                 console.info("up")
@@ -245,18 +236,13 @@ var cropBox = {
                 obj.onmousemove = null;
                 obj.onmouseup = null;
 
-                console.info("org:", x,y,width, height)
-                x = parseInt(box.style.left, 10)*devicePixelRatio
-                y = parseInt(box.style.top, 10)*devicePixelRatio
-                width = parseInt(box.style.width, 10)*devicePixelRatio
-                height = parseInt(box.style.height, 10)*devicePixelRatio
-                console.info("move:", x,y,width, height)
                 ctx.beginPath()
-                ctx.strokeRect(parseInt(box.style.left, 10) - canvasLeft, 
-                                parseInt(box.style.top, 10) - 7, 
+                ctx.strokeRect(parseInt(box.style.left, 10) , 
+                                parseInt(box.style.top, 10) , 
                                 parseInt(box.style.width, 10), 
                                 parseInt(box.style.height, 10));
-                ctx.restore();
+                ctx.save();
+
             }
             return false;
         }
