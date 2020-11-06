@@ -28,11 +28,6 @@ var canvasExt = {
         var canvasLeft = canvasRect.left;
         var canvasTop = canvasRect.top;
 
-        // key event - use DOM element as object
-        canvas.addEventListener('keyup', doKeyUp, true);
-        canvas.tabIndex = 1000
-        canvas.focus();  
-        // key event - use window as object
 
         // 要画的矩形的起点 xy
         x = 0;
@@ -42,6 +37,11 @@ var canvasExt = {
         canvas.onmousedown = function(e) {
             resizing = false
             e.preventDefault()
+            // key event - use DOM element as object
+            canvas.addEventListener('keyup', doKeyUp, true);
+            canvas.tabIndex = 1000
+            canvas.focus();  
+
             cropBox.unbuild()
             //设置画笔颜色和宽度
             var color = that.penColor;
@@ -66,8 +66,8 @@ var canvasExt = {
                     return false
                 }
                 // 要画的矩形的宽高
-                W = e.clientX - startX 
-                H = e.clientY- startY + 7
+                W = e.clientX - startX + 2
+                H = e.clientY- startY + 7 + 2
                 // if (W/H >= ratio){
                 //     H = W/ratio
                 // }else{
@@ -113,6 +113,7 @@ var canvasExt = {
 
                 cropBox.build(startX, startY , W, H)
             }
+            return false
         }
     }
 }
@@ -222,12 +223,12 @@ var cropBox = {
                 lockX || (box.style.width = iW + "px");
                 lockY || (box.style.height = iH + "px");
 
-                console.info("org:", x,y,width, height)
+                // console.info("org:", x,y,width, height)
                 x = parseInt(box.style.left, 10)*devicePixelRatio
                 y = parseInt(box.style.top, 10)*devicePixelRatio - 8
                 width = parseInt(box.style.width, 10)*devicePixelRatio
                 height = parseInt(box.style.height, 10)*devicePixelRatio
-                console.info("move:", x,y,width, height)
+                // console.info("move:", x,y,width, height)
             }
             document.onmouseup = function(e){
                 console.info("up")
