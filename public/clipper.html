@@ -9,8 +9,8 @@
     <link rel=stylesheet type="text/css" href="styles/clipper.css">
 </head>
 <body>
-    <div style="width: 1920;height: 1280;">
-        <div id="regionSelectorContainer">
+    <div style="width:1920;height: 1280;">
+       <div id="regionSelectorContainer">
             <canvas id="outerFrame" style="margin: 0 0;"width=1920 height="1280"></canvas>
             <div id="cropper-crop-box" class="cropper-crop-box" style="width: 0px; height: 0px; ">
                 <span id="line-e" class="cropper-line line-e" data-cropper-action="e"></span>
@@ -25,6 +25,28 @@
                 <span id="point-nw" class="cropper-point point-nw" data-cropper-action="nw"></span>
                 <span id="point-sw" class="cropper-point point-sw" data-cropper-action="sw"></span>
                 <span id="point-se" class="cropper-point point-se" data-cropper-action="se"></span>
+            </div>
+            <div id="optionContainer">
+                <div  tabindex="0" class="optionButton rectButton"></div>
+                <div  tabindex="1" class="optionButton circleButton"></div>
+                <div  tabindex="2" class="optionButton arrowButton" ></div>
+                <div  tabindex="3" class="optionButton mosaicButton"></div>
+                <div  tabindex="4" class="optionButton textButton"></div>
+                <div  tabindex="5" class="optionButton undoButton"></div>
+                <div  tabindex="6" class="optionButton downloadButton"></div>
+                <div  tabindex="7" class="optionButton exitButton"></div>
+                <div  tabindex="8" class="optionButton checkButton"></div>
+            </div>
+            <div id="optionContainerPop">
+                <div class="popButton minPen"></div>
+                <div class="popButton midPen"></div>
+                <div class="popButton maxPen"></div>
+                <div class="popButton redPen"></div>
+                <div class="popButton bluePen"></div>
+                <div class="popButton greenPen"></div>
+                <div class="popButton yellowPen"></div>
+                <div class="popButton grayPen"></div>
+                <div class="popButton whitePen"></div>
             </div>
         </div>
 
