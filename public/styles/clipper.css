@@ -198,3 +198,173 @@ a {
     right: -3px;
     width: 20px;
 }
+#optionContainer{
+    position: absolute;
+    border: 1px solid var(--clipper-border-color);
+    /* border-radius: 8px; */
+    /* box-shadow: rgba(0, 0, 0, 0.05) -3px 3px 3px -1px; */
+    background-color:rgb(114, 113, 113);
+    display:none;
+    width: 100%;
+    cursor: default;
+}
+.optionButton{
+    flex-shrink: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    position: absolute;
+    z-index: 1;
+    background-color:rgb(114, 113, 113);
+    top: 8px;
+}
+.rectButton {
+    border:1px solid white;
+    width: 20px;
+    height: 20px;
+    left: 20px;
+    /* -webkit-mask-image: url(./res/rect.svg); */
+    /* background: url(./res/rect.svg); */
+}
+.circleButton{
+    width: 24px;
+    height: 24px;
+    left: 60px;
+    /* -webkit-mask-image: url(./res/circle.svg); */
+    background: url(./res/circle.svg); 
+}
+.arrowButton{
+    width: 24px;
+    height: 24px;
+    left: 100px;
+    /* -webkit-mask-image: url(./res/arrow.svg); */
+    background: url(./res/arrow.svg);  
+}
+.eraseButton{
+    width: 24px;
+    height: 24px;
+    left: 140px;
+    /* -webkit-mask-image: url(./res/arrow.svg); */
+    background: url(./res/erase.svg);   
+}
+.mosaicButton{
+    width: 24px;
+    height: 24px;
+    left: 140px;
+    /* -webkit-mask-image: url(./res/arrow.svg); */
+    background: url(./res/mosaic.svg);   
+}
+.textButton{
+    width: 24px;
+    height: 24px;
+    left: 180px;
+    /* -webkit-mask-image: url(./res/arrow.svg); */
+    background: url(./res/text.svg);    
+}
+.undoButton{
+    width: 24px;
+    height: 24px;
+    left: 240px;
+    background: url(./res/undo.svg);     
+}
+.downloadButton{
+    width: 24px;
+    height: 24px;
+    left: 280px;
+    background: url(./res/download.svg);     
+}
+.exitButton{
+    width: 24px;
+    height: 24px;
+    left: 320px;
+    background: url(./res/close.svg);    
+}
+.checkButton{
+    width: 24px;
+    height: 24px;
+    left: 360px;
+    background: url(./res/check.svg);     
+}
+#optionContainerPop{
+    position: absolute;
+    display: none;
+    width: 100%;
+    max-width: 220px;
+    height: 35px;
+    margin-top: 20px;
+    background-color:rgb(78, 76, 76);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.popButton{
+    flex-shrink: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    position: absolute;
+    z-index: 1;
+    background-color:rgb(114, 113, 113);
+    top: 10px;
+}
+.minPen{
+    position: relative;
+    width: 8px;
+    height: 8px;
+    top: 12px;
+    left: 12px;    
+    background: url(./res/circle.svg);
+}
+.midPen{
+    width: 12px;
+    height: 12px;
+    top: 10px;
+    left: 30px;    
+    background: url(./res/circle.svg);
+}
+.maxPen{
+    width: 16px;
+    height: 16px;
+    top: 8px;
+    left: 50px;    
+    background: url(./res/circle.svg);
+}
+.redPen{
+    width: 15px;
+    height: 15px;
+    left: 80px;
+    background-color:rgb(245, 52, 52)
+}
+.bluePen{
+    width: 15px;
+    height: 15px;
+    left: 100px;
+    background-color: rgb(50, 98, 230)
+    /* mask-image: url(./res/rect.svg); */
+}
+.greenPen{
+    width: 15px;
+    height: 15px;
+    left: 120px;
+    background-color: rgb(48, 221, 57)
+    /* mask-image: url(./res/rect.svg); */
+}
+.yellowPen{
+    width: 15px;
+    height: 15px;
+    left: 140px;
+    background-color:rgb(233, 230, 40);
+    /* mask-image: url(./res/rect.svg); */
+}
+.grayPen{
+    width: 15px;
+    height: 15px;
+    left: 160px;
+    background-color:rgb(114, 113, 113);
+    /* mask-image: url(./res/rect.svg); */
+}
+.whitePen{
+    width: 15px;
+    height: 15px;
+    left: 180px;
+    background-color:white;
+    /* mask-image: url(./res/rect.svg); */
+}

@@ -10,7 +10,7 @@
 </head>
 <body>
     <div style="width:1920;height: 1280;">
-       <div id="regionSelectorContainer">
+        <div id="regionSelectorContainer">
             <canvas id="outerFrame" style="margin: 0 0;"width=1920 height="1280"></canvas>
             <div id="cropper-crop-box" class="cropper-crop-box" style="width: 0px; height: 0px; ">
                 <span id="line-e" class="cropper-line line-e" data-cropper-action="e"></span>
@@ -38,15 +38,19 @@
                 <div  tabindex="8" class="optionButton checkButton"></div>
             </div>
             <div id="optionContainerPop">
-                <div class="popButton minPen"></div>
-                <div class="popButton midPen"></div>
-                <div class="popButton maxPen"></div>
-                <div class="popButton redPen"></div>
-                <div class="popButton bluePen"></div>
-                <div class="popButton greenPen"></div>
-                <div class="popButton yellowPen"></div>
-                <div class="popButton grayPen"></div>
-                <div class="popButton whitePen"></div>
+                <div id="penSize">
+                    <div class="popButton minPen"></div>
+                    <div class="popButton midPen"></div>
+                    <div class="popButton maxPen"></div>
+                </div>
+                <div id="penColor"> 
+                    <div class="popButton redPen"></div>
+                    <div class="popButton bluePen"></div>
+                    <div class="popButton greenPen"></div>
+                    <div class="popButton yellowPen"></div>
+                    <div class="popButton grayPen"></div>
+                    <div class="popButton whitePen"></div>
+                </div>
             </div>
         </div>
 

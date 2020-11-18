@@ -40,7 +40,7 @@ chrome.contextMenus.create({
                 function doClip(request, sender, sendResponse){
                     chrome.runtime.onMessage.removeListener(doClip)
                     sendResponse('');
-                    console.info(request)
+                    // console.info(request)
                     let rect = request.msg
 
                     chrome.tabs.captureVisibleTab(null,{},function(dataUrl){

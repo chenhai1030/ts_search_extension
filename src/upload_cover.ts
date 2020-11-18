@@ -89,21 +89,20 @@ function injectCustomJs(jsPath)
                 canvasRect.y = data.y;
                 canvasRect.width = data.width;
                 canvasRect.height = data.height;
+                chrome.runtime.sendMessage({msg:canvasRect}, null)
                 if(clipIframe){
                     try{
-                        document.documentElement.removeChild(clipIframe)
+                        setTimeout(function(){document.documentElement.removeChild(clipIframe)}, 3000)
                     }catch(e){
                         console.info(e)
                     }
                 }
-                chrome.runtime.sendMessage({msg:canvasRect}, null);
                 break
             case 'empty':
                 if(clipIframe){
                     try{
                         document.documentElement.removeChild(clipIframe)
                     }catch(e){}
-                    return
                 }
                 break
         }
