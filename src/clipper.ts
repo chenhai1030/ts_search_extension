@@ -1,4 +1,5 @@
-import {popButtonMouseUp,  groupBindEvent, groupUnBindEvent}from  './handle';
+import {popButtonMouseUp,  groupBindEvent, groupUnBindEvent} from  './handle';
+
 let panelW = 1920
 let panelH = 1280
 // let mousedown = null
@@ -21,30 +22,68 @@ let beginPoint = {
     };
 
 let drawParams = {
-    type:"rect",  //["rect", "circle", "arrow", "mosaic", "text"],
-    color:"red",   //["red", "blue", "green", "yellow", "gray", "white"],
-    size:"max"  //["min", "mid", "max"]
+    type:"",  //["rect", "circle", "arrow", "mosaic", "text"],
+    color:"",   //["red", "blue", "green", "yellow", "gray", "white"],
+    size:""  //["min", "mid", "max"]
     };
+
+
+function drawStyle(ctx: CanvasRenderingContext2D){
+    switch(drawParams.type){
+        case "rect":
+            ctx.strokeStyle = drawParams.color 
+            switch(drawParams.size){
+                default:
+                case "min":
+                    ctx.lineWidth = 3
+                    break
+                case "mid":
+                    ctx.lineWidth = 5
+                    break
+                case "max":
+                    ctx.lineWidth = 7
+                    break
+            }
+            break
+        case "arrow":
+            ctx.fillStyle = drawParams.color
+            switch(drawParams.size){
+                default:
+                case "min":
+                    break
+                case "mid":
+                    break
+                case "max":
+                    break
+            }
+            break
+        case "circle":
+            break
+        case "mosaic":
+            break    
+    }
+}
+
 /**
  * 选取划线的canvasExt
- * @type {{drawRect: canvasExt.drawRect}}
+ * @type {}
  */
 let canvasExt = {
     devicePixelRatio:window.devicePixelRatio,
-    canvasCopy:function(canvasId){
+    canvasCopy:function(canvasId: string){
         let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx = canvas.getContext("2d") 
         imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
         canvasExt.addLayer(layerIndex, imgData)
     },
-    canvasPaste:function(canvasId){
+    canvasPaste:function(canvasId: string){
         let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx = canvas.getContext("2d") 
         if (typeof(imgData)!=='undefined'){
             ctx.putImageData(imgData,0,0);
         }
     },
-    addLayer:function(index, data){
+    addLayer:function(index: number, data: any){
         layer[index] = data
         layerIndex++
     },
@@ -84,10 +123,6 @@ let canvasExt = {
         imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
         layer[layerIndex] = imgData
     },
-    draw:function(canvasId, drawParams){
-        let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-        let ctx = canvas.getContext("2d") 
-    },
     /*
      * @param canvasId canvasId
      * @param penColor 画笔颜色
@@ -108,7 +143,7 @@ let canvasExt = {
     drawArrow:function(canvasId:string, penColor:any, penSize:any){
         let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx = canvas.getContext("2d") 
-        ctx.fillStyle = penColor;
+        ctx.fillStyle = penColor
         let Plot = {
             angle:0,
             //
@@ -119,12 +154,12 @@ let canvasExt = {
                 if(length < 250){
                     CONST.edgeLen = CONST.edgeLen/2;
                     CONST.angle = CONST.angle/2;
-                }else if(length<500){
+                }else if(length < 500){
                     CONST.edgeLen=CONST.edgeLen*length/500;
                     CONST.angle=CONST.angle*length/500;     
                 }
             },
-            getRadian: function(beginPoint, stopPoint) {
+            getRadian: function(beginPoint: { y: number; x: number; }, stopPoint: { y: number; x: number; }) {
                 Plot.angle = Math.atan2(stopPoint.y - beginPoint.y, stopPoint.x - beginPoint.x) / Math.PI * 180;
                 CONST.edgeLen = 75;
                 CONST.angle = 25;
@@ -177,6 +212,9 @@ let canvasExt = {
                 ctx.restore();
 
                 canvasExt.canvasPaste(canvasId)
+
+                drawStyle(ctx)
+
                 stopPoint.x = e.clientX
                 stopPoint.y = e.clientY
                 Plot.arrowCoord(beginPoint, stopPoint);
@@ -195,9 +233,52 @@ let canvasExt = {
                 ctx.restore()
                 canvasExt.canvasCopy(canvasId)
             }
-            return false
         }
         return false
+    },
+    drawMosaic:function(canvasId:string, penSize:string){
+        let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+        let ctx = canvas.getContext("2d") 
+
+        canvas.onmousedown = function(e) {
+            let ev = e || window.event;
+            let dx = e.clientX - canvas.offsetLeft;
+            let dy = e.clientY - canvas.ownerDocument.defaultView.pageYOffset;
+            let mx = 0
+            let my = 0
+            canvas.onmousemove = function(e){
+                dx = e.clientX - canvas.offsetLeft
+                dy = e.clientY - canvas.ownerDocument.defaultView.pageYOffset; 
+                if (Math.floor(mx - dx) < 10 && Math.floor(my-dy) < 10 && (mx != 0 || my != 0)){
+                    console.info(Math.floor(mx - dx) )
+                    return false
+                }
+                canvasExt.canvasPaste(canvasId)
+                for(let i = 0; i < 4; i++){
+                    if (i%2 == 0){
+                        ctx.fillStyle = "#FFFFFF"
+                    }else{
+                        ctx.fillStyle = '#000000'
+                    }
+                    drawStyle(ctx)
+                    ctx.beginPath()
+                    ctx.fillRect(dx+i, dy+i, 3, 3);
+                    ctx.restore();
+                    dx += 3
+                    dy += 3
+                }
+                canvasExt.canvasCopy(canvasId)
+            }
+            canvas.onmouseup=function(e){
+                e.preventDefault()
+                canvas.onmousemove = null
+                canvas.onmouseup = null
+                // ctx.beginPath()
+                // ctx.fillRect(dx, dy, 10, 10);
+                // ctx.restore();
+                canvasExt.canvasCopy(canvasId)
+            }
+        }
     },
     drawRect:function(canvasId: string, penColor: any, penSize:any){
         let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -212,7 +293,6 @@ let canvasExt = {
             let H = 0
             startX = e.clientX - 3*devicePixelRatio
             startY = e.clientY - 3*devicePixelRatio  
-            ctx.strokeStyle = penColor;
             canvas.onmousemove = function(e){
                 e.preventDefault()
                 // 要画的矩形的宽高
@@ -228,10 +308,8 @@ let canvasExt = {
 
                 canvasExt.canvasPaste(canvasId)
 
-                ctx.lineWidth=3
-                // canvas.style.cursor="crosshair"
+                drawStyle(ctx)
                 
-                ctx.strokeStyle = penColor;
                 ctx.beginPath()
                 ctx.strokeRect(startX, startY, W, H)
             }
@@ -268,8 +346,6 @@ let canvasExt = {
         let startX = 0;
         let startY = 0;
         canvas.onmousedown = function(e) {
-            console.info("drawCropRect down")
-            e.preventDefault()
             resizing = false
             // key event - use DOM element as object
             canvas.addEventListener('keyup', doKeyUp, true);
@@ -280,9 +356,9 @@ let canvasExt = {
             // let ratio = 16 / 9
             // 确定起点
             // 鼠标起点，兼容diff window.devicePixelRatio
-            startX = e.clientX - 3*devicePixelRatio
-            startY = e.clientY - 3*devicePixelRatio 
-            x = e.clientX*devicePixelRatio 
+            startX = e.clientX - canvasLeft - 1
+            startY = e.clientY - 2//- canvasTop - canvas.ownerDocument.defaultView.pageYOffset
+            x = e.clientX*devicePixelRatio + canvasLeft
             y = e.clientY*devicePixelRatio 
             //画框移动矩形
             let W = 0;
@@ -299,8 +375,8 @@ let canvasExt = {
                     return false
                 }
                 // 要画的矩形的宽高
-                W = e.clientX - startX - 3*devicePixelRatio
-                H = e.clientY - startY - 3*devicePixelRatio
+                W = e.clientX - startX - canvasLeft + 3
+                H = e.clientY - startY +5
   
                 // Store the current transformation matrix
                 ctx.save();
@@ -313,12 +389,12 @@ let canvasExt = {
                 // canvasExt.canvasPaste(canvasId)
 
                 // ctx.setLineDash([5])
-                ctx.lineWidth=3
+                ctx.lineWidth=2
                 canvas.style.cursor="crosshair"
                 
                 ctx.strokeStyle = penColor;
                 ctx.beginPath()
-                ctx.strokeRect(startX, startY, W, H)
+                ctx.strokeRect(startX +canvasLeft, startY +canvas.ownerDocument.defaultView.pageYOffset, W, H)
 
                 width = e.clientX*devicePixelRatio - x  
                 height = e.clientY*devicePixelRatio - y 
@@ -332,12 +408,12 @@ let canvasExt = {
                 
                 ctx.strokeStyle = penColor;
                 ctx.beginPath()
-                ctx.strokeRect(startX, startY, W, H)
+                ctx.strokeRect(startX+canvasLeft , startY+canvas.ownerDocument.defaultView.pageYOffset , W, H)
                 ctx.restore();
                 canvasExt.canvasCopy(canvasId)
 
                 if(W && H){
-                    cropBox.build(startX + 3*devicePixelRatio, startY + 3*devicePixelRatio, W, H)
+                    cropBox.build(startX + canvasLeft, startY + canvas.ownerDocument.defaultView.pageYOffset, W, H)
                 }
                 return false;
             }
@@ -345,7 +421,6 @@ let canvasExt = {
         }
     }
 }
-
 
 /**
  * 选取截屏
@@ -384,6 +459,14 @@ function isCanvasBlank(canvas: HTMLCanvasElement){
     return !pixelBuffer.some(color => color !== 0);
 }
 
+function prepareCropImage(context, layerNum){
+    context.clearRect(0, 0, panelW, panelH)
+    context.save()
+    for (let i = 2; i < layerNum; i++){
+        context.putImageData(layer[i],0,0) 
+    }
+}
+
 function doKeyUp(e: { keyCode: number; }){
     let canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
     if (canvas.width == 0 || canvas.height == 0){
@@ -407,13 +490,13 @@ function doKeyUp(e: { keyCode: number; }){
             canvas.getContext("2d").clearRect(0, 0, panelW, panelH)
             cropBox.unbuild()
 
-            window.parent.postMessage({
+            setTimeout(function(){window.parent.postMessage({
                 cmd: 'CLIP',
                 x: x,
                 y: y,
                 width: width,
                 height: height
-            }, '*')
+            }, '*')}, 500)
             canvas.removeEventListener("keyup", doKeyUp)
         }
     }
@@ -423,6 +506,39 @@ function doKeyUp(e: { keyCode: number; }){
 function hideCropBox(){
     let box = document.getElementById("cropper-crop-box")
     box.style.display = "none"
+}
+
+function optionContainPopMouseUp(e){
+    let str = e.target.className
+    switch(str.substr(str.lastIndexOf(" ") + 1,3)){
+        case "min":
+            drawParams.size = "min"
+            break
+        case "mid":
+            drawParams.size = "mid"
+            break
+        case "max":
+            drawParams.size = "max"
+            break
+        case "red":
+            drawParams.color = "rgb(245, 52, 52)"
+            break
+        case "blu":
+            drawParams.color = "rgb(50, 98, 230)"
+            break
+        case "gre":
+            drawParams.color = "rgb(48, 221, 57)"
+            break
+        case "yel":
+            drawParams.color = "rgb(233, 230, 40)"
+            break
+        case "gra":
+            drawParams.color = "rgb(114, 113, 113)"
+            break
+        case "whi":
+            drawParams.color = "white"
+            break
+    }
 }
 
 function optionButtondoMouseUp(e){
@@ -436,46 +552,66 @@ function optionButtondoMouseUp(e){
         document.getElementById("penColor").style.display = "none"
         popDiv.style.width = "80px"
         popDiv.style.display = "block"
+        groupBindEvent("penSize", optionContainPopMouseUp)
+
+        hideCropBox()
+        drawParams.type = "mosaic"
+        canvasExt.drawMosaic("outerFrame", "min")
     }
     else if(str.indexOf("rectButton")!= -1
     || str.indexOf("circleButton")!= -1
     || str.indexOf("arrowButton")!= -1){
         hideCropBox()
         //need 'penColor' DIV
-        document.getElementById("penColor").style.display = "display"
+        document.getElementById("penColor").style.display = "block"
         popDiv.style.width = "220px"
         
         popDiv.style.display = "block"
         groupBindEvent("optionContainerPop", popButtonMouseUp);
         if (str.indexOf("rectButton")!= -1){
+            drawParams.type = "rect"
             canvasExt.drawRect("outerFrame", "red", "min")
         }else if(str.indexOf("arrowButton")!= -1) {
+            drawParams.type = "arrow"
             canvasExt.drawArrow("outerFrame", "red", "min")
         }else if(str.indexOf("circleButton")!= -1){                
+            drawParams.type = "circle"
             // canvasExt.drawCircle("outerFrame", "red", "min")
         }
+        groupBindEvent("penSize", optionContainPopMouseUp)
+        groupBindEvent("penColor", optionContainPopMouseUp)
     }
     else if(str.indexOf("exitButton")!= -1){
-        console.info("exit button")
         canvasExt.removeLayer(true);
         (<HTMLCanvasElement>document.getElementById("outerFrame")).getContext("2d").clearRect(0, 0, panelW, panelH);
         (<HTMLCanvasElement>document.getElementById("outerFrame")).removeEventListener("keyup", doKeyUp)
         cropBox.unbuild();
+        drawParams = {type:"", color:"", size:""}
         init();
     }else if(str.indexOf("checkButton")!= -1){
-        window.parent.postMessage({
+        cropBox.unbuild()
+        drawParams = {type:"", color:"", size:""}
+        setTimeout(function(){window.parent.postMessage({
             cmd: 'CLIP',
             x: x,
             y: y,
             width: width,
             height: height
-        }, '*')
-        cropBox.unbuild()
+        }, '*')}, 500)
         // init()
     }else if (str.indexOf("undoButton")!= -1){
-        canvasExt.removeLayer(false)
+        if (drawParams.type == "mosaic"){
+            let removeNum = layerIndex/4
+            for(let i = 0; i < removeNum; i ++){
+                canvasExt.removeLayer(false)
+            }
+        }else{
+            canvasExt.removeLayer(false)
+        }
     }else if (str.indexOf("downloadButton")!= -1){
-
+        alert("暂不支持此功能")
+    }else if (str.indexOf("textButton")!= -1){
+        alert("暂不支持此功能")
     }else{
         console.info("do nothing")
     }
@@ -549,9 +685,9 @@ var cropBox = {
                 lockY || (box.style.height = iH + "px");
 
                 // console.info("org:", x,y,width, height)
-                x = parseInt(box.style.left, 10)*devicePixelRatio
-                y = parseInt(box.style.top, 10)*devicePixelRatio - 8
-                width = parseInt(box.style.width, 10)*devicePixelRatio
+                x = parseInt(box.style.left, 10)*devicePixelRatio - canvasLeft
+                y = parseInt(box.style.top, 10)*devicePixelRatio - canvas.ownerDocument.defaultView.pageYOffset
+                width = parseInt(box.style.width, 10)*devicePixelRatio 
                 height = parseInt(box.style.height, 10)*devicePixelRatio
                 // console.info("move:", x,y,width, height)
             }
@@ -562,8 +698,8 @@ var cropBox = {
                 obj.onmouseup = null;
 
                 ctx.beginPath()
-                ctx.strokeRect(parseInt(box.style.left, 10) , 
-                                parseInt(box.style.top, 10) , 
+                ctx.strokeRect(parseInt(box.style.left, 10) - canvasLeft, 
+                                parseInt(box.style.top, 10) - canvas.ownerDocument.defaultView.pageYOffset, 
                                 parseInt(box.style.width, 10), 
                                 parseInt(box.style.height, 10));
                 ctx.save();
