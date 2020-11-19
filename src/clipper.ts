@@ -366,7 +366,6 @@ let canvasExt = {
 
             //设置画笔颜色和宽度
             ctx.strokeStyle = penColor;
-            // ctx.strokeRect(startX ,startY ,0,0);
             // ctx.restore();
             
             canvas.onmousemove = function(e){
@@ -376,7 +375,7 @@ let canvasExt = {
                 }
                 // 要画的矩形的宽高
                 W = e.clientX - startX - canvasLeft + 3
-                H = e.clientY - startY +5
+                H = e.clientY - startY + 5
   
                 // Store the current transformation matrix
                 ctx.save();
@@ -577,6 +576,7 @@ function optionButtondoMouseUp(e){
         }else if(str.indexOf("circleButton")!= -1){                
             drawParams.type = "circle"
             // canvasExt.drawCircle("outerFrame", "red", "min")
+            alert("暂不支持此功能")
         }
         groupBindEvent("penSize", optionContainPopMouseUp)
         groupBindEvent("penColor", optionContainPopMouseUp)
@@ -685,10 +685,10 @@ var cropBox = {
                 lockY || (box.style.height = iH + "px");
 
                 // console.info("org:", x,y,width, height)
-                x = parseInt(box.style.left, 10)*devicePixelRatio - canvasLeft
-                y = parseInt(box.style.top, 10)*devicePixelRatio - canvas.ownerDocument.defaultView.pageYOffset
+                x = parseInt(box.style.left, 10)*devicePixelRatio +2
+                y = parseInt(box.style.top, 10)*devicePixelRatio 
                 width = parseInt(box.style.width, 10)*devicePixelRatio 
-                height = parseInt(box.style.height, 10)*devicePixelRatio
+                height = parseInt(box.style.height, 10)*devicePixelRatio - 5
                 // console.info("move:", x,y,width, height)
             }
             document.onmouseup = function(e){
@@ -697,12 +697,12 @@ var cropBox = {
                 obj.onmousemove = null;
                 obj.onmouseup = null;
 
-                ctx.beginPath()
-                ctx.strokeRect(parseInt(box.style.left, 10) - canvasLeft, 
-                                parseInt(box.style.top, 10) - canvas.ownerDocument.defaultView.pageYOffset, 
-                                parseInt(box.style.width, 10), 
-                                parseInt(box.style.height, 10));
-                ctx.save();
+                // ctx.beginPath()
+                // ctx.strokeRect(parseInt(box.style.left, 10) , 
+                //                 parseInt(box.style.top, 10) , 
+                //                 parseInt(box.style.width, 10) + 3, 
+                //                 parseInt(box.style.height, 10) + 4);
+                // ctx.save();
 
             }
             return false;
