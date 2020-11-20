@@ -52,3 +52,13 @@ function formatParams(data: { [x: string]: string | number | boolean; }) {
 //     arr = "q=" + data
 //     return arr;
 // }
+
+export function isCanvasBlank(canvas: HTMLCanvasElement){
+    const context = canvas.getContext('2d');
+
+    const pixelBuffer = new Uint32Array(
+      context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+    );
+  
+    return !pixelBuffer.some(color => color !== 0);
+}

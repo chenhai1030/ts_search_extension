@@ -265,7 +265,7 @@ a {
 .undoButton{
     width: 24px;
     height: 24px;
-    left: 240px;
+    left: 180px;
     background: url(./res/undo.svg);     
 }
 .downloadButton{
@@ -277,13 +277,13 @@ a {
 .exitButton{
     width: 24px;
     height: 24px;
-    left: 320px;
+    left: 240px;
     background: url(./res/close.svg);    
 }
 .checkButton{
     width: 24px;
     height: 24px;
-    left: 360px;
+    left: 280px;
     background: url(./res/check.svg);     
 }
 #optionContainerPop{

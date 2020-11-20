@@ -1,5 +1,6 @@
 import {popButtonMouseUp,  groupBindEvent, groupUnBindEvent} from  './handle';
-
+import {hideCropBox, optionContainPopMouseUp, drawStyle, setDrawParams, getDrawParams} from './menu';
+import {isCanvasBlank} from './util'
 let panelW = 1920
 let panelH = 1280
 // let mousedown = null
@@ -21,48 +22,6 @@ let beginPoint = {
         angle: 25
     };
 
-let drawParams = {
-    type:"",  //["rect", "circle", "arrow", "mosaic", "text"],
-    color:"",   //["red", "blue", "green", "yellow", "gray", "white"],
-    size:""  //["min", "mid", "max"]
-    };
-
-
-function drawStyle(ctx: CanvasRenderingContext2D){
-    switch(drawParams.type){
-        case "rect":
-            ctx.strokeStyle = drawParams.color 
-            switch(drawParams.size){
-                default:
-                case "min":
-                    ctx.lineWidth = 3
-                    break
-                case "mid":
-                    ctx.lineWidth = 5
-                    break
-                case "max":
-                    ctx.lineWidth = 7
-                    break
-            }
-            break
-        case "arrow":
-            ctx.fillStyle = drawParams.color
-            switch(drawParams.size){
-                default:
-                case "min":
-                    break
-                case "mid":
-                    break
-                case "max":
-                    break
-            }
-            break
-        case "circle":
-            break
-        case "mosaic":
-            break    
-    }
-}
 
 /**
  * 选取划线的canvasExt
@@ -133,6 +92,22 @@ let canvasExt = {
         let ctx = canvas.getContext("2d") 
         ctx.fillStyle = penColor;
         ctx.lineWidth = 3;
+        canvas.onmousedown = function(e){
+            let beginx=e.clientX;
+            let beginy=e.clientY;
+            canvas.onmousemove = function(e){
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                let a=(e.clientX -beginx)/2
+                let b=(e.clientY-beginy)/2
+                let centerX=(beginx+e.clientX)/2
+                let centerY=(beginy+e.clientY)/2
+                drawEllipse(ctx,centerX,centerY,a,b,e)
+            }
+            canvas.onmouseup = function(e){
+                canvas.onmousemove = null 
+                canvas.onmouseup = null 
+            }
+        }
 
     },
     /*
@@ -544,24 +519,6 @@ function cropBoxResize(){
     cropBox.resize("point-sw",  false, true, false, false) 
 }
 
-function isCanvasBlank(canvas: HTMLCanvasElement){
-    const context = canvas.getContext('2d');
-
-    const pixelBuffer = new Uint32Array(
-      context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
-    );
-  
-    return !pixelBuffer.some(color => color !== 0);
-}
-
-function prepareCropImage(context, layerNum){
-    context.clearRect(0, 0, panelW, panelH)
-    context.save()
-    for (let i = 2; i < layerNum; i++){
-        context.putImageData(layer[i],0,0) 
-    }
-}
-
 function doKeyUp(e: { keyCode: number; }){
     let canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
     if (canvas.width == 0 || canvas.height == 0){
@@ -598,44 +555,6 @@ function doKeyUp(e: { keyCode: number; }){
     return false
 }
 
-function hideCropBox(){
-    let box = document.getElementById("cropper-crop-box")
-    box.style.display = "none"
-}
-
-function optionContainPopMouseUp(e){
-    let str = e.target.className
-    switch(str.substr(str.lastIndexOf(" ") + 1,3)){
-        case "min":
-            drawParams.size = "min"
-            break
-        case "mid":
-            drawParams.size = "mid"
-            break
-        case "max":
-            drawParams.size = "max"
-            break
-        case "red":
-            drawParams.color = "rgb(245, 52, 52)"
-            break
-        case "blu":
-            drawParams.color = "rgb(50, 98, 230)"
-            break
-        case "gre":
-            drawParams.color = "rgb(48, 221, 57)"
-            break
-        case "yel":
-            drawParams.color = "rgb(233, 230, 40)"
-            break
-        case "gra":
-            drawParams.color = "rgb(114, 113, 113)"
-            break
-        case "whi":
-            drawParams.color = "white"
-            break
-    }
-}
-
 function optionButtondoMouseUp(e){
     let popDiv = document.getElementById("optionContainerPop")
     let cropBoxDiv = document.getElementById("cropper-crop-box")
@@ -644,13 +563,11 @@ function optionButtondoMouseUp(e){
     // console.info(str)
     if (str.indexOf("mosaicButton") != -1){
         //mosaic donot need 'penColor' DIV
-        // document.getElementById("penColor").style.display = "none"
-        // popDiv.style.width = "80px"
         popDiv.style.display = "none"
         groupBindEvent("penSize", optionContainPopMouseUp)
 
         hideCropBox()
-        drawParams.type = "mosaic"
+        setDrawParams("mosaic")
         canvasExt.drawMosaic("outerFrame", "min")
     }
     else if(str.indexOf("rectButton")!= -1
@@ -664,15 +581,14 @@ function optionButtondoMouseUp(e){
         popDiv.style.display = "block"
         groupBindEvent("optionContainerPop", popButtonMouseUp);
         if (str.indexOf("rectButton")!= -1){
-            drawParams.type = "rect"
+            setDrawParams("rect")
             canvasExt.drawRect("outerFrame", "red", "min")
         }else if(str.indexOf("arrowButton")!= -1) {
-            drawParams.type = "arrow"
+            setDrawParams("arrow")
             canvasExt.drawArrow("outerFrame", "red", "min")
         }else if(str.indexOf("circleButton")!= -1){                
-            drawParams.type = "circle"
-            // canvasExt.drawCircle("outerFrame", "red", "min")
-            alert("暂不支持此功能")
+            setDrawParams("circle")
+            canvasExt.drawCircle("outerFrame", "red", "min")
         }
         groupBindEvent("penSize", optionContainPopMouseUp)
         groupBindEvent("penColor", optionContainPopMouseUp)
@@ -682,11 +598,11 @@ function optionButtondoMouseUp(e){
         (<HTMLCanvasElement>document.getElementById("outerFrame")).getContext("2d").clearRect(0, 0, panelW, panelH);
         (<HTMLCanvasElement>document.getElementById("outerFrame")).removeEventListener("keyup", doKeyUp)
         cropBox.unbuild();
-        drawParams = {type:"", color:"", size:""}
+        setDrawParams("", "", "")
         init();
     }else if(str.indexOf("checkButton")!= -1){
         cropBox.unbuild()
-        drawParams = {type:"", color:"", size:""}
+        setDrawParams("", "", "")
         setTimeout(function(){window.parent.postMessage({
             cmd: 'CLIP',
             x: x,
@@ -696,7 +612,7 @@ function optionButtondoMouseUp(e){
         }, '*')}, 500)
         // init()
     }else if (str.indexOf("undoButton")!= -1){
-        if (drawParams.type == "mosaic"){
+        if (getDrawParams().type == "mosaic"){
             let removeNum = layerIndex/4
             for(let i = 0; i < removeNum; i ++){
                 canvasExt.removeLayer(false)
@@ -704,10 +620,6 @@ function optionButtondoMouseUp(e){
         }else{
             canvasExt.removeLayer(false)
         }
-    }else if (str.indexOf("downloadButton")!= -1){
-        alert("暂不支持此功能")
-    }else if (str.indexOf("textButton")!= -1){
-        alert("暂不支持此功能")
     }else{
         console.info("do nothing")
     }
@@ -721,9 +633,9 @@ var cropBox = {
         box.style.width = w + "px"
         box.style.height = h + "px"
         let opBox = document.getElementById("optionContainer")
-        opBox.style.left = x - 400 + w + 3*devicePixelRatio + "px"
+        opBox.style.left = x - 320 + w + 3*devicePixelRatio + "px"
         opBox.style.top = y + h + 10 + "px"
-        opBox.style.width = "400px"
+        opBox.style.width = "320px"
         opBox.style.height = "40px"
         opBox.style.display = "block"
         let popDiv = document.getElementById("optionContainerPop")
@@ -804,6 +716,21 @@ var cropBox = {
             return false;
         }
     }
+}
+function drawEllipse(ctx,x,y,a,b,e){
+    ctx.save()
+    a=a>0?a:-a
+    b=b>0?b:-b
+    let r=(a>b)?a:b
+    let ratioX=a/r
+    let ratioY=b/r
+    ctx.scale(ratioX,ratioY)
+    ctx.beginPath()
+    ctx.moveTo((x+a)/ratioX,y/ratioY)
+    ctx.arc(x/ratioX,y/ratioY,r,0,2*Math.PI)
+    ctx.closePath()
+    ctx.strokeStyle='red'
+    ctx.stroke()
 }
 
 function init(){
