@@ -239,6 +239,89 @@ let canvasExt = {
     drawMosaic:function(canvasId:string, penSize:string){
         let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx = canvas.getContext("2d") 
+        let startX = 0;
+        let startY = 0;
+        // canvas.onmousedown = function(e){
+        //     e.preventDefault()
+        //     //画框移动矩形
+        //     let W = 0;
+        //     let H = 0;
+        //     startX = e.clientX - 3*devicePixelRatio
+        //     startY = e.clientY - 3*devicePixelRatio  
+        //     canvas.onmousemove = function(e){
+        //         W = e.clientX - startX - 3*devicePixelRatio
+        //         H = e.clientY - startY - 3*devicePixelRatio 
+        //         // Store the current transformation matrix
+        //         ctx.save();
+        //         // Use the identity matrix while clearing the canvas
+        //         ctx.setTransform(1, 0, 0, 1, 0, 0);
+        //         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //         // Restore the transform
+        //         ctx.restore();
+
+        //         drawStyle(ctx)
+                
+        //         ctx.beginPath()
+        //         ctx.strokeRect(startX, startY, W, H)
+        //     }
+        //     canvas.onmouseup=function(e){
+        //         e.preventDefault()
+        //         canvas.onmousemove = null
+        //         canvas.onmouseup = null
+        //         // ctx.beginPath()
+        //         // ctx.strokeRect(startX, startY, W, H)
+        //         // ctx.restore();
+        //         let creatMosaic = ()=>{
+        //             let oImg = ctx.getImageData(startX, startY, W, H);
+        //             let w = oImg.width;
+        //             let h = oImg.height;
+        //             //马赛克的程度，数字越大越模糊
+        //             let num = 2;
+        //             //等分画布
+        //             let stepW = w/num;
+        //             let stepH = h/num;
+        //                      //这里是循环画布的像素点
+        //             for(var i=0;i<stepH;i++){
+        //                 for(var j=0;j<stepW;j++){
+        //                     //获取一个小方格的随机颜色，这是小方格的随机位置获取的
+        //                     var color = getXY(oImg,j*num+Math.floor(Math.random()*num),i*num+Math.floor(Math.random()*num));
+        //                     //这里是循环小方格的像素点，
+        //                     for(var k=0;k<num;k++){
+        //                         for(var l=0;l<num;l++){
+        //                             //设置小方格的颜色
+        //                             setXY(oImg,j*num+l,i*num+k,color);
+        //                         }    
+        //                     }
+                                
+        //                 }    
+        //             }
+        //             ctx.putImageData(oImg,startX,startY);
+        //         }
+        //         function getXY(obj,x,y){
+        //             var w = obj.width;
+        //             var h = obj.height;
+        //             var d = obj.data;
+        //             var color = [];
+        //             color[0] =     obj.data[4*(y*w+x)];
+        //             color[1] =     obj.data[4*(y*w+x)+1];
+        //             color[2] =     obj.data[4*(y*w+x)+2];
+        //             color[3] =     obj.data[4*(y*w+x)+3];
+        //             return color;
+        //         }
+        //         function setXY(obj,x,y,color){
+        //             var w = obj.width;
+        //             var h = obj.height;
+        //             var d = obj.data;
+        //             obj.data[4*(y*w+x)] = color[0];
+        //             obj.data[4*(y*w+x)+1] = color[1];
+        //             obj.data[4*(y*w+x)+2] = color[2];
+        //             obj.data[4*(y*w+x)+3] = color[3];
+        //         }   
+        //         creatMosaic()
+        //         canvasExt.canvasCopy(canvasId)
+        //     }
+            
+        // }
 
         canvas.onmousedown = function(e) {
             let ev = e || window.event;
@@ -254,18 +337,34 @@ let canvasExt = {
                     return false
                 }
                 canvasExt.canvasPaste(canvasId)
+
+                function RGB2Color(r,g,b)
+                {
+                    return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
+                }
+
+                function byte2Hex(n)
+                {
+                    var nybHexString = "0123456789ABCDEF";
+                    return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
+                }
+  
                 for(let i = 0; i < 4; i++){
-                    if (i%2 == 0){
-                        ctx.fillStyle = "#FFFFFF"
-                    }else{
-                        ctx.fillStyle = '#000000'
-                    }
+                    let red = Math.round(Math.random()*255);
+                    let green = Math.round(Math.random()*255);
+                    let blue = Math.round(Math.random()*255);
+                    ctx.fillStyle = RGB2Color(red,green,blue);
+                    // if (i%2 == 0){
+                    //     ctx.fillStyle = "#FFFFFF"
+                    // }else{
+                    //     ctx.fillStyle = '#000000'
+                    // }
                     drawStyle(ctx)
                     ctx.beginPath()
                     ctx.fillRect(dx+i, dy+i, 3, 3);
                     ctx.restore();
-                    dx += 3
-                    dy += 3
+                    dx += 4
+                    dy += 4
                 }
                 canvasExt.canvasCopy(canvasId)
             }
@@ -273,9 +372,6 @@ let canvasExt = {
                 e.preventDefault()
                 canvas.onmousemove = null
                 canvas.onmouseup = null
-                // ctx.beginPath()
-                // ctx.fillRect(dx, dy, 10, 10);
-                // ctx.restore();
                 canvasExt.canvasCopy(canvasId)
             }
         }
@@ -359,7 +455,7 @@ let canvasExt = {
             startX = e.clientX - canvasLeft - 1
             startY = e.clientY - 2//- canvasTop - canvas.ownerDocument.defaultView.pageYOffset
             x = e.clientX*devicePixelRatio + canvasLeft
-            y = e.clientY*devicePixelRatio 
+            y = e.clientY*devicePixelRatio +1
             //画框移动矩形
             let W = 0;
             let H = 0;
@@ -548,9 +644,9 @@ function optionButtondoMouseUp(e){
     // console.info(str)
     if (str.indexOf("mosaicButton") != -1){
         //mosaic donot need 'penColor' DIV
-        document.getElementById("penColor").style.display = "none"
-        popDiv.style.width = "80px"
-        popDiv.style.display = "block"
+        // document.getElementById("penColor").style.display = "none"
+        // popDiv.style.width = "80px"
+        popDiv.style.display = "none"
         groupBindEvent("penSize", optionContainPopMouseUp)
 
         hideCropBox()
@@ -594,9 +690,9 @@ function optionButtondoMouseUp(e){
         setTimeout(function(){window.parent.postMessage({
             cmd: 'CLIP',
             x: x,
-            y: y,
-            width: width,
-            height: height
+            y: y+4,
+            width: width-2,
+            height: height-4
         }, '*')}, 500)
         // init()
     }else if (str.indexOf("undoButton")!= -1){
@@ -686,7 +782,7 @@ var cropBox = {
 
                 // console.info("org:", x,y,width, height)
                 x = parseInt(box.style.left, 10)*devicePixelRatio +2
-                y = parseInt(box.style.top, 10)*devicePixelRatio 
+                y = parseInt(box.style.top, 10)*devicePixelRatio +1
                 width = parseInt(box.style.width, 10)*devicePixelRatio 
                 height = parseInt(box.style.height, 10)*devicePixelRatio - 5
                 // console.info("move:", x,y,width, height)
