@@ -570,22 +570,28 @@ function doKeyUp(e: { keyCode: number; }){
 function optionButtondoMouseUp(e){
     let popDiv = document.getElementById("optionContainerPop")
     let cropBoxDiv = document.getElementById("cropper-crop-box")
+    let triangleDiv = document.getElementById("triangle") 
     cropBoxDiv.style.cursor = "auto"
     let str = e.target.className
     // console.info(str)
     if (str.indexOf("mosaicButton") != -1){
         //mosaic donot need 'penColor' DIV
         popDiv.style.display = "none"
+        triangleDiv.style.display = 'none'
         groupBindEvent("penSize", optionContainPopMouseUp)
 
         hideCropBox()
         setDrawParams("mosaic")
         canvasExt.drawMosaic("outerFrame", "min")
+
     }
     else if(str.indexOf("rectButton")!= -1
     || str.indexOf("circleButton")!= -1
     || str.indexOf("arrowButton")!= -1){
         hideCropBox()
+        //triangle
+        triangleDiv.style.display = 'block'
+        triangleDiv.style.top =  parseInt(popDiv.style.top, 10) + 10 + 'px';
         //need 'penColor' DIV
         document.getElementById("penColor").style.display = "block"
         popDiv.style.width = "220px"
@@ -595,12 +601,15 @@ function optionButtondoMouseUp(e){
         if (str.indexOf("rectButton")!= -1){
             setDrawParams("rect")
             canvasExt.drawRect("outerFrame", "red", "min")
+            triangleDiv.style.left = parseInt(popDiv.style.left, 10) + 20 + 'px';
         }else if(str.indexOf("arrowButton")!= -1) {
             setDrawParams("arrow")
             canvasExt.drawArrow("outerFrame", "red", "min")
+            triangleDiv.style.left = parseInt(popDiv.style.left, 10) + 100 + 'px';
         }else if(str.indexOf("circleButton")!= -1){                
             setDrawParams("circle")
             canvasExt.drawCircle("outerFrame", "red", "min")
+            triangleDiv.style.left = parseInt(popDiv.style.left, 10) + 60 + 'px';
         }
         groupBindEvent("penSize", optionContainPopMouseUp)
         groupBindEvent("penColor", optionContainPopMouseUp)

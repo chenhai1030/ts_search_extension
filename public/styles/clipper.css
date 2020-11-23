@@ -286,6 +286,15 @@ a {
     left: 280px;
     background: url(./res/check.svg);     
 }
+#triangle{
+    position: absolute;
+    display: block;
+    border-style: solid;
+    border-width: 0px 10px 10px 10px;
+    border-color: transparent transparent rgb(78, 76, 76) transparent;
+    width: 0px;
+    height: 0px;
+}
 #optionContainerPop{
     position: absolute;
     display: none;
