@@ -90,22 +90,34 @@ let canvasExt = {
     drawCircle:function(canvasId: string, penColor: string, penSize: any){
         let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx = canvas.getContext("2d") 
-        ctx.fillStyle = penColor;
-        ctx.lineWidth = 3;
         canvas.onmousedown = function(e){
             let beginx=e.clientX;
             let beginy=e.clientY;
+            
             canvas.onmousemove = function(e){
-                ctx.clearRect(0,0,canvas.width,canvas.height);
+                ctx.save();
+                // Use the identity matrix while clearing the canvas
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Restore the transform
+                ctx.restore();
+
+                canvasExt.canvasPaste(canvasId)
+
+                drawStyle(ctx)
+
                 let a=(e.clientX -beginx)/2
                 let b=(e.clientY-beginy)/2
                 let centerX=(beginx+e.clientX)/2
                 let centerY=(beginy+e.clientY)/2
-                drawEllipse(ctx,centerX,centerY,a,b,e)
+                drawEllipse(ctx,centerX,centerY,a,b)
             }
             canvas.onmouseup = function(e){
-                canvas.onmousemove = null 
-                canvas.onmouseup = null 
+                e.preventDefault()
+                canvas.onmousemove = null
+                canvas.onmouseup = null
+                canvasExt.canvasCopy(canvasId)
+
             }
         }
 
@@ -717,20 +729,18 @@ var cropBox = {
         }
     }
 }
-function drawEllipse(ctx,x,y,a,b,e){
-    ctx.save()
+
+function drawEllipse(context,x,y,a,b){
+    context.save()
     a=a>0?a:-a
     b=b>0?b:-b
-    let r=(a>b)?a:b
-    let ratioX=a/r
-    let ratioY=b/r
-    ctx.scale(ratioX,ratioY)
-    ctx.beginPath()
-    ctx.moveTo((x+a)/ratioX,y/ratioY)
-    ctx.arc(x/ratioX,y/ratioY,r,0,2*Math.PI)
-    ctx.closePath()
-    ctx.strokeStyle='red'
-    ctx.stroke()
+    var r=(a>b)?a:b
+    // context.scale(ratioX,ratioY)
+    context.beginPath()
+    // context.moveTo((x+a)/ratioX,y/ratioY)
+    context.arc(x,y,r,0,2*Math.PI)
+    context.closePath()
+    context.stroke()
 }
 
 function init(){

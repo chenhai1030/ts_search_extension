@@ -64,13 +64,13 @@ export function drawStyle(ctx: CanvasRenderingContext2D){
             switch(drawParams.size){
                 default:
                 case "min":
-                    ctx.lineWidth = 3
+                    ctx.lineWidth = 1
                     break
                 case "mid":
-                    ctx.lineWidth = 5
+                    ctx.lineWidth = 3
                     break
                 case "max":
-                    ctx.lineWidth = 7
+                    ctx.lineWidth = 5
                     break
             }
             break
@@ -87,6 +87,18 @@ export function drawStyle(ctx: CanvasRenderingContext2D){
             }
             break
         case "circle":
+            ctx.strokeStyle = drawParams.color 
+            switch(drawParams.size){
+                case 'min':
+                    ctx.lineWidth = 1
+                    break
+                case 'mid':
+                    ctx.lineWidth = 3
+                    break
+                case 'max':
+                    ctx.lineWidth = 5
+                    break
+            }
             break
         case "mosaic":
             break    
