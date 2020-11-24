@@ -6,10 +6,16 @@ let panelH = 1280
 // let mousedown = null
 let x: number,y: number,width: number, height: number
 let resizing = false
-let imgData: ImageData;
+let imgData: ImageData = undefined
 let layer = new Array;
 let layerIndex = 0;
 
+let cropBoxBorder = {
+    top: 0,
+    left: 0,
+    width: 0,
+    height:0
+};
 let beginPoint = {
         x,y
     },
@@ -494,6 +500,11 @@ let canvasExt = {
                 ctx.restore();
                 canvasExt.canvasCopy(canvasId)
 
+                cropBoxBorder.top = startX+canvasLeft 
+                cropBoxBorder.left = startY+canvas.ownerDocument.defaultView.pageYOffset
+                cropBoxBorder.width = W
+                cropBoxBorder.height = H
+
                 if(W && H){
                     cropBox.build(startX + canvasLeft, startY + canvas.ownerDocument.defaultView.pageYOffset, W, H)
                 }
@@ -551,7 +562,8 @@ function doKeyUp(e: { keyCode: number; }){
             cropBox.unbuild()
         }
         if(e.keyCode == 13){
-            canvas.getContext("2d").clearRect(0, 0, panelW, panelH)
+            cropBoxBorderClear()
+            // canvas.getContext("2d").clearRect(0, 0, panelW, panelH)
             cropBox.unbuild()
 
             setTimeout(function(){window.parent.postMessage({
@@ -622,6 +634,7 @@ function optionButtondoMouseUp(e){
         setDrawParams("", "", "")
         init();
     }else if(str.indexOf("checkButton")!= -1){
+        cropBoxBorderClear()
         cropBox.unbuild()
         setDrawParams("", "", "")
         setTimeout(function(){window.parent.postMessage({
@@ -674,6 +687,7 @@ var cropBox = {
         opBox.style.display = "none"
         let popDiv = document.getElementById("optionContainerPop") 
         popDiv.style.display = "none";
+        layerIndex = 0
         groupUnBindEvent("optionContainer");
     },
     resize: function(id:string, isTop:boolean, isLeft:boolean, lockX:boolean, lockY:boolean){
@@ -739,7 +753,7 @@ var cropBox = {
     }
 }
 
-function drawEllipse(context,x,y,a,b){
+function drawEllipse(context: CanvasRenderingContext2D,x: number,y: number,a: number,b: number){
     context.save()
     a=a>0?a:-a
     b=b>0?b:-b
@@ -750,6 +764,18 @@ function drawEllipse(context,x,y,a,b){
     context.arc(x,y,r,0,2*Math.PI)
     context.closePath()
     context.stroke()
+}
+
+function cropBoxBorderClear(){
+    let canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
+    let ctx = canvas.getContext("2d")
+    let lineWidth = 3
+    ctx.clearRect(cropBoxBorder.top, cropBoxBorder.left-lineWidth, cropBoxBorder.width + lineWidth, lineWidth*2)
+    ctx.clearRect(cropBoxBorder.top-lineWidth, cropBoxBorder.left-lineWidth, lineWidth*2, cropBoxBorder.height)
+
+    ctx.clearRect(cropBoxBorder.top+cropBoxBorder.width-lineWidth, cropBoxBorder.left, lineWidth*2, cropBoxBorder.height)
+    ctx.clearRect(cropBoxBorder.top-lineWidth, cropBoxBorder.left + cropBoxBorder.height-lineWidth, cropBoxBorder.width+lineWidth*2, lineWidth*2)
+    ctx.save()
 }
 
 function init(){
