@@ -1,4 +1,3 @@
-
 // 'use strict';
 function sendMessageToContentScript(message, callback)
 {
@@ -38,29 +37,47 @@ chrome.contextMenus.create({
         getCurrentTabId((tabId) => {
             chrome.runtime.onMessage.addListener(
                 function doClip(request, sender, sendResponse){
-                    chrome.runtime.onMessage.removeListener(doClip)
                     sendResponse('');
                     // console.info(request)
-                    let rect = request.msg
+                    let message = request.msg
+                    let rect: { x: number; y: number; width: number; height: number; };
+                    if (message.CLIP!= undefined){
+                        chrome.runtime.onMessage.removeListener(doClip)
+                        rect = message.CLIP
+                        chrome.tabs.captureVisibleTab(null,{},function(dataUrl){
+                            let img = new Image();
+                            img.onload = function() {
+                                let canvas = document.createElement('canvas');
+                                canvas.width = 960
+                                canvas.height = 540
+                                let context = canvas.getContext('2d');
+                                // Assuming px,py as starting coordinates and hx,hy be the width and the height of the image to be extracted
+                                context.drawImage(img, rect.x, rect.y, rect.width, rect.height, 0, 0, canvas.width , canvas.height);
+                                let croppedUri = canvas.toDataURL('image/png');
+                                // You could deal with croppedUri as cropped image src.
+                                // port.postMessage({message:croppedUri})
+                                // port.disconnect()
+                                sendMessageToContentScript({cmd:"upload-connect", message:croppedUri}, null)
+                            };
+                            img.src = dataUrl
+                        });
+                    }else if (message.MOSAIC != undefined){
+                        rect = message.MOSAIC
+                        chrome.tabs.captureVisibleTab(null,{},function(dataUrl){
+                            let img = new Image();
+                            img.onload = function(){
+                                let canvas = document.createElement('canvas');
+                                canvas.width = rect.width
+                                canvas.height = rect.height
+                                let context = canvas.getContext('2d');
+                                context.drawImage(img, rect.x, rect.y, rect.width, rect.height, 0, 0, canvas.width, canvas.height);
+                                let mosaicUri = canvas.toDataURL('image/png')
 
-                    chrome.tabs.captureVisibleTab(null,{},function(dataUrl){
-                        var img = new Image();
-                        img.onload = function() {
-                            var canvas = document.createElement('canvas');
-                            canvas.width = 960
-                            canvas.height = 540
-                            var context = canvas.getContext('2d');
-                            // Assuming px,py as starting coordinates and hx,hy be the width and the height of the image to be extracted
-                            context.drawImage(img, rect.x, rect.y, rect.width, rect.height, 0, 0, canvas.width , canvas.height);
-                            let croppedUri = canvas.toDataURL('image/png');
-                            // You could deal with croppedUri as cropped image src.
-                            // port.postMessage({message:croppedUri})
-                            // port.disconnect()
-                            sendMessageToContentScript({cmd:"upload-connect", message:croppedUri}, null)
-                        };
-                        img.src = dataUrl
-                    });
-                    // sendResponse("remove clip iframe")
+                                sendMessageToContentScript({cmd:"mosaic-data", message:mosaicUri}, null)
+                            };
+                            img.src = dataUrl
+                        });
+                    }
                 }
             );
             // var port = chrome.tabs.connect(tabId, {name: 'upload-connect'});

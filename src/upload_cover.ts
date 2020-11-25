@@ -85,20 +85,26 @@ function injectCustomJs(jsPath)
         const data = e.data
         switch(data.cmd){
             case 'CLIP':
+            case 'MOSAIC':
                 canvasRect.x = data.x;
                 canvasRect.y = data.y;
                 canvasRect.width = data.width;
                 canvasRect.height = data.height;
-                chrome.runtime.sendMessage({msg:canvasRect}, null)
-                if(clipIframe){
-                    try{
-                        setTimeout(function(){document.documentElement.removeChild(clipIframe)}, 3000)
-                    }catch(e){
-                        console.info(e)
+                if (data.cmd == 'CLIP'){
+                    chrome.runtime.sendMessage({msg:{'CLIP':canvasRect}}, null)
+                    if(clipIframe){
+                        try{
+                            setTimeout(function(){document.documentElement.removeChild(clipIframe)}, 3000)
+                        }catch(e){
+                            console.info(e)
+                        }
                     }
                 }
+                else{
+                    chrome.runtime.sendMessage({msg:{'MOSAIC':canvasRect}}, null)
+                }
                 break
-            case 'empty':
+            case 'EMPTY':
                 if(clipIframe){
                     try{
                         document.documentElement.removeChild(clipIframe)
@@ -106,12 +112,17 @@ function injectCustomJs(jsPath)
                 }
                 break
         }
-        window.removeEventListener("message", handleKey)
+        if (data.cmd != 'MOSAIC'){
+            window.removeEventListener("message", handleKey)
+        }
     }, false);
 
     function handleUploadCover(request, sender, response){
-        chrome.runtime.onMessage.removeListener(handleUploadCover)
-        if(request.cmd == 'upload-connect') {
+        if (request.cmd == 'mosaic-data'){
+            clipIframe.contentWindow.postMessage({"mosaicData":request.message}, '*')
+        }
+        else if(request.cmd == 'upload-connect') {
+            chrome.runtime.onMessage.removeListener(handleUploadCover)
             let base64 = request.message
             let params = {
                 filetype: "jpeg",

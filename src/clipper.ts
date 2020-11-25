@@ -1,6 +1,7 @@
 import {popButtonMouseUp,  groupBindEvent, groupUnBindEvent} from  './handle';
 import {hideCropBox, optionContainPopMouseUp, drawStyle, setDrawParams, getDrawParams} from './menu';
 import {isCanvasBlank} from './util'
+import {gaussBlur} from './mosaic'
 let panelW = 1920
 let panelH = 1280
 // let mousedown = null
@@ -10,6 +11,12 @@ let imgData: ImageData = undefined
 let layer = new Array;
 let layerIndex = 0;
 
+let mosaicRect = {
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0
+}
 let cropBoxBorder = {
     top: 0,
     left: 0,
@@ -58,12 +65,7 @@ let canvasExt = {
         if (all){
             layerIndex = 0
             imgData = undefined
-            ctx.save();
-            // Use the identity matrix while clearing the canvas
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Restore the transform
-            ctx.restore()
+            canvasClear(canvas, ctx);
             return false;
         }
 
@@ -74,13 +76,7 @@ let canvasExt = {
         delete layer[layerIndex]
         layerIndex--
 
-        // Store the current transformation matrix
-        ctx.save();
-        // Use the identity matrix while clearing the canvas
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // Restore the transform
-        ctx.restore()
+        canvasClear(canvas, ctx);
 
         for(let i = 0; i < layerIndex; i++){
             ctx.putImageData(layer[i], 0, 0)
@@ -101,12 +97,7 @@ let canvasExt = {
             let beginy=e.clientY;
             
             canvas.onmousemove = function(e){
-                ctx.save();
-                // Use the identity matrix while clearing the canvas
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Restore the transform
-                ctx.restore();
+                canvasClear(canvas, ctx);
 
                 canvasExt.canvasPaste(canvasId)
 
@@ -196,13 +187,7 @@ let canvasExt = {
             beginPoint.x = e.clientX
             beginPoint.y = e.clientY
             canvas.onmousemove = function(e){
-                // Store the current transformation matrix
-                ctx.save();
-                // Use the identity matrix while clearing the canvas
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Restore the transform
-                ctx.restore();
+                canvasClear(canvas, ctx);
 
                 canvasExt.canvasPaste(canvasId)
 
@@ -232,140 +217,58 @@ let canvasExt = {
     drawMosaic:function(canvasId:string, penSize:string){
         let canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         let ctx = canvas.getContext("2d") 
-        let startX = 0;
-        let startY = 0;
-        // canvas.onmousedown = function(e){
-        //     e.preventDefault()
-        //     //画框移动矩形
-        //     let W = 0;
-        //     let H = 0;
-        //     startX = e.clientX - 3*devicePixelRatio
-        //     startY = e.clientY - 3*devicePixelRatio  
-        //     canvas.onmousemove = function(e){
-        //         W = e.clientX - startX - 3*devicePixelRatio
-        //         H = e.clientY - startY - 3*devicePixelRatio 
-        //         // Store the current transformation matrix
-        //         ctx.save();
-        //         // Use the identity matrix while clearing the canvas
-        //         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        //         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        //         // Restore the transform
-        //         ctx.restore();
+        let canvasRect = canvas.getBoundingClientRect();
+        //canvas 矩形框的左上角坐标
+        let canvasLeft = canvasRect.left;
+        let canvasTop = canvasRect.top
+        let X = 0;
+        let Y = 0;
+        let Width = 0;
+        let Height = 0;
+ 
+        ctx.strokeStyle = "blue"
+        ctx.lineWidth = 1
 
-        //         drawStyle(ctx)
-                
-        //         ctx.beginPath()
-        //         ctx.strokeRect(startX, startY, W, H)
-        //     }
-        //     canvas.onmouseup=function(e){
-        //         e.preventDefault()
-        //         canvas.onmousemove = null
-        //         canvas.onmouseup = null
-        //         // ctx.beginPath()
-        //         // ctx.strokeRect(startX, startY, W, H)
-        //         // ctx.restore();
-        //         let creatMosaic = ()=>{
-        //             let oImg = ctx.getImageData(startX, startY, W, H);
-        //             let w = oImg.width;
-        //             let h = oImg.height;
-        //             //马赛克的程度，数字越大越模糊
-        //             let num = 2;
-        //             //等分画布
-        //             let stepW = w/num;
-        //             let stepH = h/num;
-        //                      //这里是循环画布的像素点
-        //             for(var i=0;i<stepH;i++){
-        //                 for(var j=0;j<stepW;j++){
-        //                     //获取一个小方格的随机颜色，这是小方格的随机位置获取的
-        //                     var color = getXY(oImg,j*num+Math.floor(Math.random()*num),i*num+Math.floor(Math.random()*num));
-        //                     //这里是循环小方格的像素点，
-        //                     for(var k=0;k<num;k++){
-        //                         for(var l=0;l<num;l++){
-        //                             //设置小方格的颜色
-        //                             setXY(oImg,j*num+l,i*num+k,color);
-        //                         }    
-        //                     }
-                                
-        //                 }    
-        //             }
-        //             ctx.putImageData(oImg,startX,startY);
-        //         }
-        //         function getXY(obj,x,y){
-        //             var w = obj.width;
-        //             var h = obj.height;
-        //             var d = obj.data;
-        //             var color = [];
-        //             color[0] =     obj.data[4*(y*w+x)];
-        //             color[1] =     obj.data[4*(y*w+x)+1];
-        //             color[2] =     obj.data[4*(y*w+x)+2];
-        //             color[3] =     obj.data[4*(y*w+x)+3];
-        //             return color;
-        //         }
-        //         function setXY(obj,x,y,color){
-        //             var w = obj.width;
-        //             var h = obj.height;
-        //             var d = obj.data;
-        //             obj.data[4*(y*w+x)] = color[0];
-        //             obj.data[4*(y*w+x)+1] = color[1];
-        //             obj.data[4*(y*w+x)+2] = color[2];
-        //             obj.data[4*(y*w+x)+3] = color[3];
-        //         }   
-        //         creatMosaic()
-        //         canvasExt.canvasCopy(canvasId)
-        //     }
-            
-        // }
-
-        canvas.onmousedown = function(e) {
-            let ev = e || window.event;
-            let dx = e.clientX - canvas.offsetLeft;
-            let dy = e.clientY - canvas.ownerDocument.defaultView.pageYOffset;
-            let mx = 0
-            let my = 0
+        canvas.onmousedown = function(e){
+            e.preventDefault()
+            window.addEventListener("message", function handleMosaic(e){
+                dataURLToCanvas(e.data.mosaicData, putMosaic)
+                setTimeout(function(){
+                    canvasExt.canvasCopy(canvasId)
+                    window.removeEventListener("message", handleMosaic)}, 2000)
+            });
+            X = e.clientX
+            Y = e.clientY
             canvas.onmousemove = function(e){
-                dx = e.clientX - canvas.offsetLeft
-                dy = e.clientY - canvas.ownerDocument.defaultView.pageYOffset; 
-                if (Math.floor(mx - dx) < 10 && Math.floor(my-dy) < 10 && (mx != 0 || my != 0)){
-                    console.info(Math.floor(mx - dx) )
-                    return false
-                }
+                e.preventDefault()
+                canvasClear(canvas, ctx);
+
                 canvasExt.canvasPaste(canvasId)
-
-                function RGB2Color(r,g,b)
-                {
-                    return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
-                }
-
-                function byte2Hex(n)
-                {
-                    var nybHexString = "0123456789ABCDEF";
-                    return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
-                }
-  
-                for(let i = 0; i < 4; i++){
-                    let red = Math.round(Math.random()*255);
-                    let green = Math.round(Math.random()*255);
-                    let blue = Math.round(Math.random()*255);
-                    ctx.fillStyle = RGB2Color(red,green,blue);
-                    // if (i%2 == 0){
-                    //     ctx.fillStyle = "#FFFFFF"
-                    // }else{
-                    //     ctx.fillStyle = '#000000'
-                    // }
-                    drawStyle(ctx)
-                    ctx.beginPath()
-                    ctx.fillRect(dx+i, dy+i, 3, 3);
-                    ctx.restore();
-                    dx += 4
-                    dy += 4
-                }
-                canvasExt.canvasCopy(canvasId)
+                Width = e.clientX - X 
+                Height = e.clientY - Y 
+                ctx.beginPath()
+                ctx.strokeRect(X, Y, Width, Height)
             }
             canvas.onmouseup=function(e){
                 e.preventDefault()
                 canvas.onmousemove = null
                 canvas.onmouseup = null
-                canvasExt.canvasCopy(canvasId)
+                // ctx.beginPath()
+                // ctx.strokeRect(startX, startY, Width, Height)
+                // ctx.restore();
+                canvasClear(canvas, ctx)
+                canvasExt.canvasPaste(canvasId)
+                mosaicRect.x = X*devicePixelRatio + canvasLeft
+                mosaicRect.y = Y*devicePixelRatio + 1
+                mosaicRect.w = Width
+                mosaicRect.h = Height
+                window.parent.postMessage({
+                    cmd: 'MOSAIC',
+                    x: mosaicRect.x ,
+                    y: mosaicRect.y,
+                    width: mosaicRect.w ,
+                    height: mosaicRect.h
+                }, '*')
             }
         }
     },
@@ -387,13 +290,8 @@ let canvasExt = {
                 // 要画的矩形的宽高
                 W = e.clientX - startX - 3*devicePixelRatio
                 H = e.clientY - startY - 3*devicePixelRatio 
-                // Store the current transformation matrix
-                ctx.save();
-                // Use the identity matrix while clearing the canvas
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Restore the transform
-                ctx.restore();
+
+                canvasClear(canvas, ctx);
 
                 canvasExt.canvasPaste(canvasId)
 
@@ -466,14 +364,7 @@ let canvasExt = {
                 W = e.clientX - startX - canvasLeft + 3
                 H = e.clientY - startY + 5
   
-                // Store the current transformation matrix
-                ctx.save();
-                // Use the identity matrix while clearing the canvas
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Restore the transform
-                ctx.restore();
-
+                canvasClear(canvas, ctx);
                 // canvasExt.canvasPaste(canvasId)
 
                 // ctx.setLineDash([5])
@@ -549,14 +440,14 @@ function doKeyUp(e: { keyCode: number; }){
     }
 
     if(isCanvasBlank(canvas)){
-        console.info("empty!")
+        console.info("EMPTY!")
         window.parent.postMessage({
-            cmd: 'empty'
+            cmd: 'EMPTY'
         }, '*')
         canvasExt.removeLayer(true)
         canvas.removeEventListener("keyup", doKeyUp)
     }else{
-        console.info("not empty!")
+        console.info("not EMPTY!")
         if(e.keyCode == 27){
             canvas.getContext("2d").clearRect(0, 0, panelW, panelH)
             cropBox.unbuild()
@@ -640,9 +531,9 @@ function optionButtondoMouseUp(e){
         setTimeout(function(){window.parent.postMessage({
             cmd: 'CLIP',
             x: x,
-            y: y+4,
-            width: width-2,
-            height: height-4
+            y: y,
+            width: width,
+            height: height
         }, '*')}, 500)
         // init()
     }else if (str.indexOf("undoButton")!= -1){
@@ -694,12 +585,12 @@ var cropBox = {
         let box = document.getElementById("cropper-crop-box")
         let obj = document.getElementById(id)
 
-        var canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
-        var ctx = canvas.getContext("2d")
-        var canvasRect = canvas.getBoundingClientRect();
+        let canvas = document.getElementById("outerFrame") as HTMLCanvasElement;
+        let ctx = canvas.getContext("2d")
+        let canvasRect = canvas.getBoundingClientRect();
         //canvas 矩形框的左上角坐标
-        var canvasLeft = canvasRect.left;
-        var canvasTop = canvasRect.top;
+        let canvasLeft = canvasRect.left;
+        let canvasTop = canvasRect.top;
 
         obj.onmousedown = function(e) {
             e.preventDefault()
@@ -720,7 +611,7 @@ var cropBox = {
                 let iL = e.clientX - disX;
                 let iT = e.clientY - disY;
                 let iH = isTop ? iParentHeight - iT : obj.offsetHeight + iT;
-                var iW = isLeft ? iParentWidth - iL : obj.offsetWidth + iL;
+                let iW = isLeft ? iParentWidth - iL : obj.offsetWidth + iL;
                 isLeft && (box.style.left = iParentLeft + iL + 'px');
                 isTop && (box.style.top = iParentTop + iT + 'px');
 
@@ -757,7 +648,7 @@ function drawEllipse(context: CanvasRenderingContext2D,x: number,y: number,a: nu
     context.save()
     a=a>0?a:-a
     b=b>0?b:-b
-    var r=(a>b)?a:b
+    let r=(a>b)?a:b
     // context.scale(ratioX,ratioY)
     context.beginPath()
     // context.moveTo((x+a)/ratioX,y/ratioY)
@@ -777,6 +668,37 @@ function cropBoxBorderClear(){
     ctx.clearRect(cropBoxBorder.top-lineWidth, cropBoxBorder.left + cropBoxBorder.height-lineWidth, cropBoxBorder.width+lineWidth*2, lineWidth*2)
     ctx.save()
 }
+
+function dataURLToCanvas(dataurl, cb){
+	let canvas = document.createElement('CANVAS') as HTMLCanvasElement
+	let ctx = canvas.getContext('2d');
+	let img = new Image();
+	img.onload = function(){
+		canvas.width = img.width;
+		canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+		cb(canvas);
+    };
+	img.src = dataurl;
+}
+
+function putMosaic(canvas:HTMLCanvasElement){
+    let dCanvas = document.getElementById("outerFrame") as HTMLCanvasElement;
+    let ctx = dCanvas.getContext("2d")
+    let img = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height)
+    ctx.putImageData(gaussBlur(img), mosaicRect.x/devicePixelRatio, mosaicRect.y/devicePixelRatio)
+}
+
+function canvasClear(canvas, ctx){
+    // Store the current transformation matrix
+    ctx.save();
+    // Use the identity matrix while clearing the canvas
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Restore the transform
+    ctx.restore();
+}
+
 
 function init(){
     clipScreenshots("outerFrame")
