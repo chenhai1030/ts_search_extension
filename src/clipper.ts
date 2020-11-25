@@ -188,7 +188,6 @@ let canvasExt = {
             beginPoint.y = e.clientY
             canvas.onmousemove = function(e){
                 canvasClear(canvas, ctx);
-
                 canvasExt.canvasPaste(canvasId)
 
                 drawStyle(ctx)
@@ -234,20 +233,19 @@ let canvasExt = {
             window.addEventListener("message", function handleMosaic(e){
                 dataURLToCanvas(e.data.mosaicData, putMosaic)
                 setTimeout(function(){
-                    canvasExt.canvasCopy(canvasId)
-                    window.removeEventListener("message", handleMosaic)}, 2000)
+                    window.removeEventListener("message", handleMosaic)}, 1000)
             });
-            X = e.clientX
-            Y = e.clientY
+            X = e.clientX - canvasLeft -1
+            Y = e.clientY - 2
             canvas.onmousemove = function(e){
                 e.preventDefault()
                 canvasClear(canvas, ctx);
 
                 canvasExt.canvasPaste(canvasId)
-                Width = e.clientX - X 
-                Height = e.clientY - Y 
+                Width = e.clientX - X - canvasLeft 
+                Height = e.clientY - Y  
                 ctx.beginPath()
-                ctx.strokeRect(X, Y, Width, Height)
+                ctx.strokeRect(X + canvasLeft, Y + canvas.ownerDocument.defaultView.pageYOffset, Width, Height)
             }
             canvas.onmouseup=function(e){
                 e.preventDefault()
@@ -258,10 +256,10 @@ let canvasExt = {
                 // ctx.restore();
                 canvasClear(canvas, ctx)
                 canvasExt.canvasPaste(canvasId)
-                mosaicRect.x = X*devicePixelRatio + canvasLeft
-                mosaicRect.y = Y*devicePixelRatio + 1
-                mosaicRect.w = Width
-                mosaicRect.h = Height
+                mosaicRect.x = X*devicePixelRatio + canvasLeft -2
+                mosaicRect.y = Y*devicePixelRatio 
+                mosaicRect.w = Width + canvasLeft
+                mosaicRect.h = Height + 2
                 window.parent.postMessage({
                     cmd: 'MOSAIC',
                     x: mosaicRect.x ,
@@ -686,7 +684,8 @@ function putMosaic(canvas:HTMLCanvasElement){
     let dCanvas = document.getElementById("outerFrame") as HTMLCanvasElement;
     let ctx = dCanvas.getContext("2d")
     let img = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height)
-    ctx.putImageData(gaussBlur(img), mosaicRect.x/devicePixelRatio, mosaicRect.y/devicePixelRatio)
+    ctx.putImageData(gaussBlur(img), mosaicRect.x/devicePixelRatio+1, mosaicRect.y/devicePixelRatio + 7)
+    canvasExt.canvasCopy("outerFrame")
 }
 
 function canvasClear(canvas, ctx){
