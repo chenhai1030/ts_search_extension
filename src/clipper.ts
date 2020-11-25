@@ -684,7 +684,8 @@ function putMosaic(canvas:HTMLCanvasElement){
     let dCanvas = document.getElementById("outerFrame") as HTMLCanvasElement;
     let ctx = dCanvas.getContext("2d")
     let img = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height)
-    ctx.putImageData(gaussBlur(img), mosaicRect.x/devicePixelRatio+1, mosaicRect.y/devicePixelRatio + 7)
+    ctx.putImageData(gaussBlur(img), mosaicRect.x/devicePixelRatio+1, 
+        mosaicRect.y/devicePixelRatio + canvas.ownerDocument.defaultView.pageYOffset)
     canvasExt.canvasCopy("outerFrame")
 }
 
