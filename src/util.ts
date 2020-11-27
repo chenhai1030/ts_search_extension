@@ -1,22 +1,24 @@
 export const serverip = "http://172.17.5.90/"
 
 export default function ajax(options: { type?: any; dataType?: any; data?: any; success?: any; fail?: any; url?: any; }) {
+    let params = undefined
+    let xhr = undefined
     options = options || {};
     options.type = (options.type || "GET").toUpperCase();
     options.dataType = options.dataType || "json";
     if (options.type == "POST"){
-        var params = formatParams(options.data)
+        params = formatParams(options.data)
     }
 
     //创建 - 非IE6 - 第一步
     if (window.XMLHttpRequest) {
-        var xhr = new XMLHttpRequest();
+        xhr = new XMLHttpRequest();
     }
 
     //接收 - 第三步
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
-            var status = xhr.status;
+            let status = xhr.status;
             if (status >= 200 && status < 300) {
                 options.success && options.success(xhr.responseText, xhr.responseXML);
             } else {
@@ -38,7 +40,7 @@ export default function ajax(options: { type?: any; dataType?: any; data?: any; 
 }
 
 function formatParams(data: { [x: string]: string | number | boolean; }) {
-    var arr = [];
+    let arr = [];
     for (var name in data) {
         arr.push(encodeURIComponent(name) + "=" + encodeURIComponent(data[name]));
     }
@@ -62,3 +64,27 @@ export function isCanvasBlank(canvas: HTMLCanvasElement){
   
     return !pixelBuffer.some(color => color !== 0);
 }
+
+export function canvasClear(canvas, ctx){
+    // Store the current transformation matrix
+    ctx.save();
+    // Use the identity matrix while clearing the canvas
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Restore the transform
+    ctx.restore();
+}
+
+export function dataURLToCanvas(dataurl, cb){
+	let canvas = document.createElement('CANVAS') as HTMLCanvasElement
+	let ctx = canvas.getContext('2d');
+	let img = new Image();
+	img.onload = function(){
+		canvas.width = img.width;
+		canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+		cb(canvas);
+    };
+	img.src = dataurl;
+}
+

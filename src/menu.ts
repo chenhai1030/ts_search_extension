@@ -4,6 +4,7 @@ let drawParams = {
     size:""  //["min", "mid", "max"]
     };
 
+
 export function setDrawParams(type=undefined, color=undefined, size=undefined){
     if(type != undefined){
         drawParams.type = type

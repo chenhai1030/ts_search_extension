@@ -75,7 +75,7 @@ function injectCustomJs(jsPath)
     injectCustomJs(null)
     _video.pause();
     
-    var canvasRect = {
+    let canvasRect = {
         x:Number,
         y:Number,
         width:Number,
@@ -133,7 +133,7 @@ function injectCustomJs(jsPath)
                 url:"/ajaxa/post/upload_pic",
                 data:params,
                 success: function(data: string) {
-                    var obj = null;
+                    let obj = null;
                     let params:any = null;
                     try{
                         obj = JSON.parse( data );

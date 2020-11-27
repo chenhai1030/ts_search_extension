@@ -122,13 +122,13 @@ function preview(src: string, msz: string){
 }
 
 function getBase64Image(img:HTMLImageElement){
-    var canvas = document.createElement("canvas");
+    let canvas = document.createElement("canvas");
     canvas.width = img.width
     canvas.height = img.height
-    var ctx = canvas.getContext("2d");
+    let ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, img.width, img.height); 
-    var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
-    var dataURL = canvas.toDataURL("image/" + ext);
+    let ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+    let dataURL = canvas.toDataURL("image/" + ext);
     // console.log(dataURL)
     return dataURL;
 }
@@ -151,7 +151,7 @@ function save_still(id: string, stillUrl: any){
 }
 
 function exchange(data: string){
-    var img = new Image();
+    let img = new Image();
     let iframes = document.getElementsByTagName("iframe")
     for (let i=0; i<iframes.length; i++){
         if (iframes[i].dataset.src == "/admin/refine_task"){
@@ -173,7 +173,7 @@ function exchange(data: string){
             // console.info(mImg)
             // mImg.src = data
 
-            var ext = data.substring(data.lastIndexOf(".")+1);
+            let ext = data.substring(data.lastIndexOf(".")+1);
             let params = {
                 filetype: ext,
                 image: base64.substring(base64.lastIndexOf(",")+1),
@@ -187,7 +187,7 @@ function exchange(data: string){
                 // },
                 success: function(data: string) {
                     console.info(data)
-                    var obj = null;
+                    let obj = null;
                     try{
                         obj = JSON.parse( data );
                     }catch(e){};  

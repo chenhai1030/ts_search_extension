@@ -1,9 +1,10 @@
 import {popButtonMouseUp,  groupBindEvent, groupUnBindEvent} from  './handle';
 import {hideCropBox, optionContainPopMouseUp, drawStyle, setDrawParams, getDrawParams} from './menu';
-import {isCanvasBlank} from './util'
+import {isCanvasBlank, canvasClear, dataURLToCanvas} from './util'
 import {gaussBlur} from './mosaic'
-let panelW = 1920
-let panelH = 1280
+
+const panelW = 1920
+const panelH = 1280
 // let mousedown = null
 let x: number,y: number,width: number, height: number
 let resizing = false
@@ -363,7 +364,6 @@ let canvasExt = {
                 H = e.clientY - startY + 5
   
                 canvasClear(canvas, ctx);
-                // canvasExt.canvasPaste(canvasId)
 
                 // ctx.setLineDash([5])
                 ctx.lineWidth=2
@@ -548,7 +548,7 @@ function optionButtondoMouseUp(e){
     }
 }
 
-var cropBox = {
+let cropBox = {
     build: function(x, y, w, h){
         let box = document.getElementById("cropper-crop-box")
         box.style.left = x + "px"
@@ -667,19 +667,6 @@ function cropBoxBorderClear(){
     ctx.save()
 }
 
-function dataURLToCanvas(dataurl, cb){
-	let canvas = document.createElement('CANVAS') as HTMLCanvasElement
-	let ctx = canvas.getContext('2d');
-	let img = new Image();
-	img.onload = function(){
-		canvas.width = img.width;
-		canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-		cb(canvas);
-    };
-	img.src = dataurl;
-}
-
 function putMosaic(canvas:HTMLCanvasElement){
     let dCanvas = document.getElementById("outerFrame") as HTMLCanvasElement;
     let ctx = dCanvas.getContext("2d")
@@ -688,17 +675,6 @@ function putMosaic(canvas:HTMLCanvasElement){
         mosaicRect.y/devicePixelRatio + canvas.ownerDocument.defaultView.pageYOffset)
     canvasExt.canvasCopy("outerFrame")
 }
-
-function canvasClear(canvas, ctx){
-    // Store the current transformation matrix
-    ctx.save();
-    // Use the identity matrix while clearing the canvas
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Restore the transform
-    ctx.restore();
-}
-
 
 function init(){
     clipScreenshots("outerFrame")
