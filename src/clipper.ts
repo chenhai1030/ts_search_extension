@@ -255,19 +255,19 @@ let canvasExt = {
                 // ctx.beginPath()
                 // ctx.strokeRect(startX, startY, Width, Height)
                 // ctx.restore();
-                canvasClear(canvas, ctx)
+                canvasClear(canvas, ctx);
                 canvasExt.canvasPaste(canvasId)
                 mosaicRect.x = X*devicePixelRatio + canvasLeft -2
                 mosaicRect.y = Y*devicePixelRatio 
                 mosaicRect.w = Width + canvasLeft
                 mosaicRect.h = Height + 2
-                window.parent.postMessage({
+                setTimeout(function(){window.parent.postMessage({
                     cmd: 'MOSAIC',
                     x: mosaicRect.x ,
                     y: mosaicRect.y,
                     width: mosaicRect.w ,
                     height: mosaicRect.h
-                }, '*')
+                }, '*')}, 100)
             }
         }
     },

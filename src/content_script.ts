@@ -190,9 +190,11 @@ function exchange(data: string){
                     let obj = null;
                     try{
                         obj = JSON.parse( data );
-                    }catch(e){};  
-                    save_still(id, obj.data.url)
-                    mImg.src = obj.data.url 
+                    }catch(e){};
+                    if (obj != null){
+                        save_still(id, obj.data.url)
+                        mImg.src = obj.data.url 
+                    }
                 }
             });
         }
