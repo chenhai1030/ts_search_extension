@@ -7,8 +7,8 @@ let frameLeft = 0
 
 function dragStart (mouseX: any, mouseY: any) {
     let myIframe = document.getElementById("FuntvGalleryHelper")
-    frameTop = myIframe.offsetTop
-    frameLeft = myIframe.offsetLeft
+    frameTop = myIframe!.offsetTop
+    frameLeft = myIframe!.offsetLeft
     // 得出鼠标在上层的位置
     pageMouseX = mouseX 
     pageMouseY = mouseY 
@@ -26,8 +26,8 @@ function handleFrameMousemove (offsetX: number, offsetY: number) {
     let myIframe = document.getElementById("FuntvGalleryHelper")
     frameTop += offsetY 
     frameLeft += offsetX 
-    myIframe.style.top = frameTop + 'px'
-    myIframe.style.left = frameLeft + 'px'
+    myIframe!.style.top = frameTop + 'px'
+    myIframe!.style.left = frameLeft + 'px'
     // 更新鼠标在上层的位置，补上偏移
     pageMouseX += offsetX
     pageMouseY += offsetY
@@ -69,8 +69,8 @@ function removeInjected(){
 
 function closeModal(){
     let modalDiv = document.getElementById("FuntvModalDiv")
-    modalDiv.style.display = "none";
-    modalDiv.style.zIndex = "-1"
+    modalDiv!.style.display = "none";
+    modalDiv!.style.zIndex = "-1"
 }
 
 function checkESC(e:KeyboardEvent){
@@ -97,7 +97,7 @@ function addModal(){
                                 </div> \
                             </div>'
         modalDiv.innerHTML += '<span id="FuntvModalClose">×</span><img id="funtv-modal-content">'
-        document.getElementById("FuntvModalClose").addEventListener("click", closeModal)
+        document.getElementById("FuntvModalClose")!.addEventListener("click", closeModal)
 
         // modalDiv.innerHTML += '<div id="navl" class="nav noforcus" tabindex="0"><span class="icon"></span></div>'
         // modalDiv.innerHTML += '<div id="navr" class="nav noforcus" tabindex="0"><span class="icon"></span></div>'
@@ -110,8 +110,8 @@ function preview(src: string, msz: string){
     let modal = document.getElementById('FuntvModalDiv');
     (<HTMLIFrameElement>document.getElementById("funtv-modal-content")).src = src
     console.info(src)
-    document.getElementById("img-caption").innerHTML = src.substring(src.lastIndexOf('/')+1)
-    document.getElementById("msz").innerHTML = msz
+    document.getElementById("img-caption")!.innerHTML = src.substring(src.lastIndexOf('/')+1)
+    document.getElementById("msz")!.innerHTML = msz
     
     if(modal){
         modal.style.display = "block"
@@ -126,7 +126,7 @@ function getBase64Image(img:HTMLImageElement){
     canvas.width = img.width
     canvas.height = img.height
     let ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0, img.width, img.height); 
+    ctx!.drawImage(img, 0, 0, img.width, img.height); 
     let ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
     let dataURL = canvas.toDataURL("image/" + ext);
     // console.log(dataURL)

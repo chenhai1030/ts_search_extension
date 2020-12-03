@@ -647,10 +647,12 @@ function drawEllipse(context: CanvasRenderingContext2D,x: number,y: number,a: nu
     a=a>0?a:-a
     b=b>0?b:-b
     let r=(a>b)?a:b
+b
     // context.scale(ratioX,ratioY)
     context.beginPath()
     // context.moveTo((x+a)/ratioX,y/ratioY)
-    context.arc(x,y,r,0,2*Math.PI)
+    // context.arc(x,y,r,0,2*Math.PI)
+    context.ellipse(x, y, a, b, 0, 0, 2*Math.PI)
     context.closePath()
     context.stroke()
 }

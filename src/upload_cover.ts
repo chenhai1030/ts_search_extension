@@ -67,10 +67,10 @@ function injectCustomJs(jsPath)
         }
     }
 
-    let exDiv = contentIframe.contentWindow.document.getElementsByClassName("img-still mod-editpic")
+    let exDiv = contentIframe!.contentWindow!.document.getElementsByClassName("img-still mod-editpic")
     let mImg = exDiv[0].childNodes[2] as HTMLImageElement
     let id = exDiv[0].attributes[6].nodeValue
-    let shotDiv = contentIframe.contentWindow.document.getElementsByClassName("videobox")
+    let shotDiv = contentIframe!.contentWindow!.document.getElementsByClassName("videobox")
     let _video = shotDiv[0].childNodes[3] as HTMLVideoElement
     injectCustomJs(null)
     _video.pause();
@@ -143,7 +143,7 @@ function injectCustomJs(jsPath)
                         }
                     }catch(e){};  
 
-                    contentIframe.contentWindow.postMessage({
+                    contentIframe!.contentWindow!.postMessage({
                         cmd: 'VIDEOCHANGE',
                         data: params
                     }, '*') 
